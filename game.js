@@ -2,7 +2,7 @@ var ctx = $('#canvas').getContext('2d');
 var mike = new Image();
 var x = 100;
 var y = 100;
-var ground = 750;
+var ground = 600;
 var yvelocity = 0;
 var adown = false;
 var ddown = false;
@@ -33,9 +33,11 @@ document.onkeydown = function(event) {
   }
   if (event.code == 'KeyA') {
     adown = true;
+    mike.src = 'mike2.png';
   }
   if (event.code == 'KeyD') {
     ddown = true;
+    mike.src = 'mike.png';
   }
 }
 document.onkeyup = function(event) {
