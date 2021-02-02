@@ -4,8 +4,8 @@ var fpslimit = 0;
 var mike = new Image();
 mike.src = 'mike2.png';
 var platform = new Image();
-platform.src = 'platformexample.png';
-var platforms = [{x: 100, y: 600}, {x: 0, y: 800}, {x: 100, y: 800}, {x: 200, y: 800}, {x: 300, y: 800}, {x: 400, y: 800}, {x: 500, y: 800}, {x: 600, y: 800}, {x: 700, y: 800}, {x: 800, y: 800}, {x: 900, y: 800}, {x: 1000, y: 800}];
+platform.src = 'platform.png';
+var platforms = [{x: 1000, y: 200}, {x: 600, y: 400}, {x: 200, y: 600}, {x: 0, y: 800}, {x: 200, y: 800}, {x: 400, y: 800}, {x: 600, y: 800}, {x: 800, y: 800}, {x: 1000, y: 800}];
 var x = 101;
 var y = 100;
 var yvelocity = 0;
@@ -17,8 +17,8 @@ function loop() {
   $('#canvas').width = $('#canvas').width;
   var condition = false;
   for (var i = 0; i < platforms.length; i++) {
-    ctx.drawImage(platform, platforms[i].x - x + 550, platforms[i].y);
-    if ((x > platforms[i].x) && (x < (platforms[i].x + 100)) && (y > platforms[i].y) && (y < (platforms[i].y + 100))) {
+    ctx.drawImage(platform, platforms[i].x - x + 570, platforms[i].y);
+    if ((x > platforms[i].x) && (x < (platforms[i].x + 220)) && (y > platforms[i].y) && (y < (platforms[i].y + 35))) {
       condition = true;
       yvelocity = 0;
       y = platforms[i].y + 1;
