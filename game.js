@@ -33,7 +33,7 @@ function loop() {
   if (!condition) {
     yvelocity += 0.5;
   }
-  ctx.drawImage(mike, 500, y - 150);
+  ctx.drawImage(mike, 500, y - 170);
   if (adown) {
     x-= 5;
   }
