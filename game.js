@@ -19,8 +19,9 @@ function loop() {
   for (var i = 0; i < platforms.length; i++) {
     ctx.drawImage(platform, platforms[i].x - x + 570, platforms[i].y);
     if ((x > platforms[i].x) && (x < (platforms[i].x + 220)) && (y > platforms[i].y) && (y < (platforms[i].y + 35))) {
-      if (yvelocity > 0) {
+      if (yvelocity < 0) {
         yvelocity = 0;
+        y = platforms[i].y + 36d
       }
       else {
         condition = true;
