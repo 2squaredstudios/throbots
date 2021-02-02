@@ -21,7 +21,7 @@ function loop() {
     if ((x > platforms[i].x) && (x < (platforms[i].x + 220)) && (y > platforms[i].y) && (y < (platforms[i].y + 35))) {
       if (yvelocity < 0) {
         yvelocity = 0;
-        y = platforms[i].y + 36d
+        y = platforms[i].y + 36;
       }
       else {
         condition = true;
