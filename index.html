@@ -7,6 +7,21 @@
   <body>
     <h1>Platformer</h1>
     <p>A game by <a href="https://github.com/thecoder08">thecoder08</a> and <a href="https://github.com/WHERES-HARRY">WHERES-HARRY</a>.</p>
-    <p><a href="game.html">Start</a></p>
+    <p><input id="address" placeholder="Address"><button onclick="player1();">Player 1</button><button onclick="player2();">Player 2</button><button onclick="player3();">Player 3</button><button onclick="player4();">Player 4</button></p>
+    <script src="node_modules/@thecoder08/docuget/main.js"></script>
+    <script>
+      function player1() {
+        document.location.href = 'game.html?player=0&address=' + $('#address').value;
+      }
+      function player2() {
+        document.location.href = 'game.html?player=1&address=' + $('#address').value;
+      }
+      function player3() {
+        document.location.href = 'game.html?player=2&address=' + $('#address').value;
+      }
+      function player4() {
+        document.location.href = 'game.html?player=3&address=' + $('#address').value;
+      }
+    </script>
   </body>
 </html>
