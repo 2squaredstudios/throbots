@@ -4,8 +4,32 @@ var ctx = $('#canvas').getContext('2d');
 var fpscounter = 0;
 var dir = 'right';
 var fpslimit = 0;
-var mike = new Image();
-mike.src = 'player' + player + 'right.png';
+var playerFrames = [
+  {
+    left: new Image(),
+    right: new Image()
+  },
+  {
+    left: new Image(),
+    right: new Image()
+  },
+  {
+    left: new Image(),
+    right: new Image()
+  },
+  {
+    left: new Image(),
+    right: new Image()
+  }
+]
+playerFrames[0].left.src = 'player0left.png';
+playerFrames[0].right.src = 'player0right.png';
+playerFrames[1].left.src = 'player1left.png';
+playerFrames[1].right.src = 'player1right.png';
+playerFrames[2].left.src = 'player2left.png';
+playerFrames[2].right.src = 'player2right.png';
+playerFrames[3].left.src = 'player3left.png';
+playerFrames[3].right.src = 'player3right.png';
 var platform = new Image();
 platform.src = 'platform.png';
 var platforms = [{x: 1000, y: 200}, {x: 600, y: 400}, {x: 200, y: 600}, {x: 0, y: 800}, {x: 200, y: 800}, {x: 400, y: 800}, {x: 600, y: 800}, {x: 800, y: 800}, {x: 1000, y: 800}, {x: 1200, y: 800}];
@@ -42,19 +66,19 @@ function loop() {
         y = platforms[i].y + 1;
       }
     }
-    ctx.drawImage(platform, platforms[i].x - x + 570, platforms[i].y);
   }
   if (!condition) {
     yvelocity += 0.5;
   }
   for (var i = 0; i < positions.length; i++) {
-    mike.src = 'player' + i + positions[i].dir + '.png';
     if (i == player) {
-      console.log(positions[i].y);
-      ctx.drawImage(mike, 500, positions[i].y - 170);
+      for (var j = 0; j < platforms.length; j++) {
+        ctx.drawImage(platform, platforms[j].x - positions[i].x + 570, platforms[j].y);
+      }
+      ctx.drawImage(playerFrames[i][positions[i].dir], 500, positions[i].y - 170);
     }
     else {
-      ctx.drawImage(mike, positions[i].x + 500 - positions[player].x, parseInt(positions[i].y) - 170);
+      ctx.drawImage(playerFrames[i][positions[i].dir], (positions[i].x - positions[player].x) + 500, positions[i].y - 170);
     }
   }
   $('#yvelocity').innerHTML = yvelocity;
@@ -74,8 +98,8 @@ document.onkeydown = function(event) {
     dir = 'right';
   }
 }
-mike.onload = function() {
-var gameloop = setInterval(loop, fpslimit);
+platform.onload = function() {
+  gameloop = setInterval(loop, fpslimit);
 }
 document.onkeyup = function(event) {
   if (event.code == 'KeyA') {
