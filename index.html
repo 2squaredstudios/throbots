@@ -7,20 +7,38 @@
   <body>
     <h1>Platformer</h1>
     <p>A game by <a href="https://github.com/thecoder08">thecoder08</a> and <a href="https://github.com/WHERES-HARRY">WHERES-HARRY</a>.</p>
-    <p><input id="address" placeholder="Address"><button onclick="player1();">Player 1</button><button onclick="player2();">Player 2</button><button onclick="player3();">Player 3</button><button onclick="player4();">Player 4</button></p>
+    <h2>Join Game</h2>
+    <p>Connect to dedicated server (not recommended, unless you know what you're doing): <input type="checkbox" id="dedicated"></p>
+    <p><input id="address" placeholder="Lobby ID"><button onclick="player1();">Player 1</button><button onclick="player2();">Player 2</button><button onclick="player3();">Player 3</button><button onclick="player4();">Player 4</button></p>
+    <h2>Create Game</h2>
+    <p><button onclick="newGame();">Get Lobby ID</button></p>
+    <script src="node_modules/@thecoder08/http/browser.js"></script>
     <script src="node_modules/@thecoder08/docuget/main.js"></script>
     <script>
       function player1() {
-        document.location.href = 'game.html?player=0&address=' + $('#address').value;
+        document.location.href = 'game.html?player=0&address=' + $('#address').value + '&dedicated=' + $('#dedicated').checked;
       }
       function player2() {
-        document.location.href = 'game.html?player=1&address=' + $('#address').value;
+        document.location.href = 'game.html?player=1&address=' + $('#address').value + '&dedicated=' + $('#dedicated').checked;
       }
       function player3() {
-        document.location.href = 'game.html?player=2&address=' + $('#address').value;
+        document.location.href = 'game.html?player=2&address=' + $('#address').value + '&dedicated=' + $('#dedicated').checked;
       }
       function player4() {
-        document.location.href = 'game.html?player=3&address=' + $('#address').value;
+        document.location.href = 'game.html?player=3&address=' + $('#address').value + '&dedicated=' + $('#dedicated').checked;
+      }
+      $('#dedicated').onclick = function() {
+        if ($('#dedicated').checked) {
+          $('#address').placeholder = 'Address';
+        }
+        else {
+          $('#address').placeholder = 'Lobby ID';
+        }
+      }
+      function newGame() {
+        request('http://localhost:8080/getlennetlobbyid', function(data) {
+          alert('Lobby ID to join: ' + data);
+        });
       }
     </script>
   </body>

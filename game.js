@@ -1,5 +1,6 @@
-var address = new URL(document.location.href).searchParams.get('address');
+var dedicated = (new URL(document.location.href).searchParams.get('dedicated')) == 'true';
 var player = parseInt(new URL(document.location.href).searchParams.get('player'));
+var address = new URL(document.location.href).searchParams.get('address');
 var ctx = $('#canvas').getContext('2d');
 var fpscounter = 0;
 var dir = 'right';
@@ -39,6 +40,14 @@ var positions = [];
 var yvelocity = 0;
 var adown = false;
 var ddown = false;
+if (!dedicated) {
+  request('http://localhost:8080/get?lennetlobbyid=' + address, function(data) {
+    if (data == '404 lobby ' + address + ' not found') {
+      alert('Could not connect to server: ' + data);
+      document.location.href = 'index.html';
+    }
+  });
+}
 function loop() {
   $('#canvas').width = $('#canvas').width;
   fpscounter++;
@@ -49,10 +58,22 @@ function loop() {
   if (ddown) {
     x += 5;
   }
-  request('http://' + address + '/send?player=' + player + '&x=' + x + '&y=' + y + '&dir=' + dir, function(data) {});
-  request('http://' + address + '/get', function(data) {
-    positions = JSON.parse(data);
-  });
+  if (dedicated) {
+    request('http://' + address + '/send?player=' + player + '&x=' + x + '&y=' + y + '&dir=' + dir, function(data) {});
+  }
+  else {
+    request('http://localhost:8080/send?player=' + player + '&x=' + x + '&y=' + y + '&dir=' + dir + '&lennetlobbyid=' + address, function(data) {});
+  }
+  if (dedicated) {
+    request('http://' + address + '/get', function(data) {
+      positions = JSON.parse(data);
+    });
+  }
+  else {
+    request('http://localhost:8080/get?lennetlobbyid=' + address, function(data) {
+      positions = JSON.parse(data);
+    });
+  }
   var condition = false;
   for (var i = 0; i < platforms.length; i++) {
     if ((x > platforms[i].x) && (x < (platforms[i].x + 220)) && (y > platforms[i].y) && (y < (platforms[i].y + 35))) {
@@ -81,7 +102,6 @@ function loop() {
       ctx.drawImage(playerFrames[i][positions[i].dir], (positions[i].x - positions[player].x) + 500, positions[i].y - 170);
     }
   }
-  $('#yvelocity').innerHTML = yvelocity;
 }
 document.onkeydown = function(event) {
   if (Math.floor(yvelocity) == 0) {
