@@ -1,2 +1,2 @@
 # Platformer
-This a a platformer in development by me and WHERES-HARRY.
+This is a platformer in development by me and WHERES-HARRY.
