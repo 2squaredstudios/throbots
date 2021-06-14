@@ -17,4 +17,4 @@ lennet.setServerInstance(function(id) {
     }
   });
 });
-lennet.init(8080);
+lennet.init(25568);

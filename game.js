@@ -41,7 +41,7 @@ var yvelocity = 0;
 var adown = false;
 var ddown = false;
 if (!dedicated) {
-  request('http://localhost:8080/get?lennetlobbyid=' + address, function(data) {
+  request('http://34.67.110.14:25568/get?lennetlobbyid=' + address, function(data) {
     if (data == '404 lobby ' + address + ' not found') {
       alert('Could not connect to server: ' + data);
       document.location.href = 'index.html';
@@ -62,7 +62,7 @@ function loop() {
     request('http://' + address + '/send?player=' + player + '&x=' + x + '&y=' + y + '&dir=' + dir, function(data) {});
   }
   else {
-    request('http://localhost:8080/send?player=' + player + '&x=' + x + '&y=' + y + '&dir=' + dir + '&lennetlobbyid=' + address, function(data) {});
+    request('http://34.67.110.14:25568/send?player=' + player + '&x=' + x + '&y=' + y + '&dir=' + dir + '&lennetlobbyid=' + address, function(data) {});
   }
   if (dedicated) {
     request('http://' + address + '/get', function(data) {
@@ -70,7 +70,7 @@ function loop() {
     });
   }
   else {
-    request('http://localhost:8080/get?lennetlobbyid=' + address, function(data) {
+    request('http://34.67.110.14:25568/get?lennetlobbyid=' + address, function(data) {
       positions = JSON.parse(data);
     });
   }
