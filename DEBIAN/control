@@ -1,0 +1,8 @@
+Package: platformer
+Version: 1.0
+Section: custom
+Priority: optional
+Architecture: amd64
+Essential: no
+Maintainer: Lennon McLean
+Description: A cool game and stuff

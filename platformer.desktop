@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Platformer
+Comment=A cool game and stuff
+Exec=platformer
+Terminal=false
+Categories=Game;
