@@ -1,6 +1,6 @@
 {
   "name": "platformer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A platform game.",
   "main": "index.html",
   "scripts": {
@@ -9,8 +9,8 @@
   "author": "thecoder08",
   "license": "MIT",
   "dependencies": {
-    "@thecoder08/docuget": "^1.0.3",
-    "@thecoder08/http": "^1.0.2",
-    "@thecoder08/lennet": "^1.0.1"
+    "@thecoder08/docuget": "thecoder08/docuget",
+    "@thecoder08/http": "thecoder08/http",
+    "@thecoder08/lennet": "thecoder08/lennet"
   }
 }
