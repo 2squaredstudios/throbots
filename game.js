@@ -1,49 +1,24 @@
-var dedicated = (new URL(document.location.href).searchParams.get('dedicated')) == 'true';
-var player = parseInt(new URL(document.location.href).searchParams.get('player'));
-var address = new URL(document.location.href).searchParams.get('address');
+var searchParams = new URL(document.location.href).searchParams;
+var dedicated = searchParams.get('dedicated') == 'true';
+var skin = parseInt(searchParams.get('skin'));
+var address = searchParams.get('address');
+var name = searchParams.get('name');
 var ctx = $('#canvas').getContext('2d');
-var fpscounter = 0;
-var dir = 'right';
-var fpslimit = 0;
-var playerFrames = [
-  {
-    left: new Image(),
-    right: new Image()
-  },
-  {
-    left: new Image(),
-    right: new Image()
-  },
-  {
-    left: new Image(),
-    right: new Image()
-  },
-  {
-    left: new Image(),
-    right: new Image()
-  }
-]
-playerFrames[0].left.src = 'player0left.png';
-playerFrames[0].right.src = 'player0right.png';
-playerFrames[1].left.src = 'player1left.png';
-playerFrames[1].right.src = 'player1right.png';
-playerFrames[2].left.src = 'player2left.png';
-playerFrames[2].right.src = 'player2right.png';
-playerFrames[3].left.src = 'player3left.png';
-playerFrames[3].right.src = 'player3right.png';
+var testimage = new Image();
+testimage.src = 'player0left.png';
 var platform = new Image();
 platform.src = 'platform.png';
-var platforms = [{x: 1000, y: 200}, {x: 600, y: 400}, {x: 200, y: 600}, {x: 0, y: 800}, {x: 200, y: 800}, {x: 400, y: 800}, {x: 600, y: 800}, {x: 800, y: 800}, {x: 1000, y: 800}, {x: 1200, y: 800}];
-var x = 101;
-var y = 100;
-var positions = [];
-var yvelocity = 0;
-var adown = false;
-var ddown = false;
-if (!dedicated) {
-  request('http://34.67.110.14:25568/get?lennetlobbyid=' + address, function(data) {
+var fpscounter = 0;
+var fpslimit = 0;
+var platforms = [];
+var entities = {};
+if (dedicated) {
+  request('http://' + address + '/join?entity=' + name, function(data) {});
+}
+else {
+  request('http://localhost:25568/join?lennetlobbyid=' + address + '&entity=' + name, function(data) {
     if (data == '404 lobby ' + address + ' not found') {
-      alert('Could not connect to server: ' + data);
+      alert('Could not find game: ' + data);
       document.location.href = 'index.html';
     }
   });
@@ -51,71 +26,61 @@ if (!dedicated) {
 function loop() {
   $('#canvas').width = $('#canvas').width;
   fpscounter++;
-  y += yvelocity;
-  if (adown) {
-    x-= 5;
-  }
-  if (ddown) {
-    x += 5;
-  }
   if (dedicated) {
-    request('http://' + address + '/send?player=' + player + '&x=' + x + '&y=' + y + '&dir=' + dir, function(data) {});
-  }
-  else {
-    request('http://34.67.110.14:25568/send?player=' + player + '&x=' + x + '&y=' + y + '&dir=' + dir + '&lennetlobbyid=' + address, function(data) {});
-  }
-  if (dedicated) {
-    request('http://' + address + '/get', function(data) {
-      positions = JSON.parse(data);
+    request('http://' + address + '/getentities', function(data) {
+      entities = JSON.parse(data);
+    });
+    request('http://' + address + '/getplatforms', function(data) {
+      platforms = JSON.parse(data);
     });
   }
   else {
-    request('http://34.67.110.14:25568/get?lennetlobbyid=' + address, function(data) {
-      positions = JSON.parse(data);
+    request('http://localhost:25568/getentities?lennetlobbyid=' + address, function(data) {
+      entities = JSON.parse(data);
+      console.log(entities);
+    });
+    request('http://localhost:25568/getplatforms?lennetlobbyid=' + address, function(data) {
+      platforms = JSON.parse(data);
     });
   }
-  var condition = false;
-  for (var i = 0; i < platforms.length; i++) {
-    if ((x > platforms[i].x) && (x < (platforms[i].x + 220)) && (y > platforms[i].y) && (y < (platforms[i].y + 35))) {
-      if (yvelocity < 0) {
-        yvelocity = 0;
-        y = platforms[i].y + 36;
-      }
-      else {
-        condition = true;
-        yvelocity = 0;
-        y = platforms[i].y + 1;
-      }
-    }
-  }
-  if (!condition) {
-    yvelocity += 0.5;
-  }
-  for (var i = 0; i < positions.length; i++) {
-    if (i == player) {
+  for (var entity in entities) {
+    if (entity == name) {
       for (var j = 0; j < platforms.length; j++) {
-        ctx.drawImage(platform, platforms[j].x - positions[i].x + 570, platforms[j].y);
+        ctx.drawImage(platform, platforms[j].x - entities[entity].x + 570, platforms[j].y);
       }
-      ctx.drawImage(playerFrames[i][positions[i].dir], 500, positions[i].y - 170);
+      ctx.drawImage(testimage, 500, entities[entity].y - 170);
     }
     else {
-      ctx.drawImage(playerFrames[i][positions[i].dir], (positions[i].x - positions[player].x) + 500, positions[i].y - 170);
+      ctx.drawImage(testimage, (entities[entity].x - entities[name].x) + 500, entities[entity].y - 170);
     }
   }
 }
 document.onkeydown = function(event) {
-  if (Math.floor(yvelocity) == 0) {
-    if (event.code == 'KeyW') {
-      yvelocity = -20;
+  if (!event.repeat) {
+  if (event.code == 'KeyW') {
+    if (dedicated) {
+      request('http://' + address + '/jump?entity=' + name, function() {});
+    }
+    else {
+      request('http://localhost:25568/jump?lennetlobbyid=' + address + '&entity=' + name, function() {});
     }
   }
   if (event.code == 'KeyA') {
-    adown = true;
-    dir = 'left';
+    if (dedicated) {
+      request('http://' + address + '/leftdown?entity=' + name, function() {});
+    }
+    else {
+      request('http://localhost:25568/leftdown?lennetlobbyid=' + address + '&entity=' + name, function() {});
+    }
   }
   if (event.code == 'KeyD') {
-    ddown = true;
-    dir = 'right';
+    if (dedicated) {
+      request('http://' + address + '/rightdown?entity=' + name, function() {});
+    }
+    else {
+      request('http://localhost:25568/rightdown?lennetlobbyid=' + address + '&entity=' + name, function() {});
+    }
+  }
   }
 }
 platform.onload = function() {
@@ -123,10 +88,20 @@ platform.onload = function() {
 }
 document.onkeyup = function(event) {
   if (event.code == 'KeyA') {
-    adown = false;
+    if (dedicated) {
+      request('http://' + address + '/leftup?entity=' + name, function() {});
+    }
+    else {
+      request('http://localhost:25568/leftup?lennetlobbyid=' + address + '&entity=' + name, function() {});
+    }
   }
   if (event.code == 'KeyD') {
-    ddown = false;
+    if (dedicated) {
+      request('http://' + address + '/rightup?entity=' + name, function() {});
+    }
+    else {
+      request('http://localhost:25568/rightup?lennetlobbyid=' + address + '&entity=' + name, function() {});
+    }
   }
 }
 setInterval(function() {
