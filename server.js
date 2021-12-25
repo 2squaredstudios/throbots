@@ -6,10 +6,10 @@ if (process.argv.length < 4) {
 else {
 var http = require('@thecoder08/http');
 var entities = {};
-var platforms = [{x: 1000, y: 200}, {x: 600, y: 400}, {x: 200, y: 600}, {x: 0, y: 800}, {x: 200, y: 800}, {x: 400, y: 800}, {x: 600, y: 800}, {x: 800, y: 800}, {x: 1000, y: 800}, {x: 1200, y: 800}];
+var platforms = [{x: 200, y: 40}, {x: 120, y: 80}, {x: 40, y: 120}, {x: 0, y: 160}, {x: 200, y: 800}, {x: 400, y: 800}, {x: 600, y: 800}, {x: 800, y: 800}, {x: 1000, y: 800}, {x: 1200, y: 800}];
 http.server(process.argv[2],   function(req, res) {
   if (req.pathname == '/join') {
-    entities[req.query.entity] = {x: 10, y: 10, yvelocity: 0, leftdown: false, rightdown: false};
+    entities[req.query.entity] = {x: 2, y: 2, yvelocity: 0, leftdown: false, rightdown: false};
     res(200, 'text/plain', 'joined successfully');
   }
   else if (req.pathname == '/getentities') {
@@ -57,7 +57,7 @@ http.server(process.argv[2],   function(req, res) {
   else if (req.pathname == '/jump') {
     if (entities.hasOwnProperty(req.query.entity)) {
       if (Math.floor(entities[req.query.entity].yvelocity) == 0) {
-        entities[req.query.entity].yvelocity = -20;
+        entities[req.query.entity].yvelocity = -4;
         res(200, 'text/plain', 'ok');
       }
       else {
@@ -78,17 +78,17 @@ function loop() {
   for (var entity in entities) {
     entities[entity].y += entities[entity].yvelocity;
     if (entities[entity].leftdown) {
-      entities[entity].x -= 5;
+      entities[entity].x -= 1;
     }
     if (entities[entity].rightdown) {
       entities[entity].x += 5;
     }
     var condition = false;
     for (var i = 0; i < platforms.length; i++) {
-      if ((entities[entity].x > platforms[i].x) && (entities[entity].x < (platforms[i].x + 220)) && (entities[entity].y > platforms[i].y) && (entities[entity].y < (platforms[i].y + 35))) {
+      if ((entities[entity].x > platforms[i].x) && (entities[entity].x < (platforms[i].x + 83)) && (entities[entity].y > platforms[i].y) && (entities[entity].y < (platforms[i].y + 9))) {
         if (entities[entity].yvelocity < 0) {
           entities[entity].yvelocity = 0;
-          entities[entity].y = platforms[i].y + 36;
+          entities[entity].y = platforms[i].y + 9;
         }
         else {
           condition = true;

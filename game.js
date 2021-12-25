@@ -46,12 +46,12 @@ function loop() {
   for (var entity in entities) {
     if (entity == name) {
       for (var j = 0; j < platforms.length; j++) {
-        ctx.drawImage(platform, platforms[j].x - entities[entity].x + 570, platforms[j].y);
+        ctx.drawImage(platform, platforms[j].x - entities[entity].x + 114, platforms[j].y);
       }
-      ctx.drawImage(testimage, 500, entities[entity].y - 170);
+      ctx.drawImage(testimage, 100, entities[entity].y - 34);
     }
     else {
-      ctx.drawImage(testimage, (entities[entity].x - entities[name].x) + 500, entities[entity].y - 170);
+      ctx.drawImage(testimage, (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
     }
   }
 }
