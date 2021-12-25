@@ -81,14 +81,14 @@ function loop() {
       entities[entity].x -= 1;
     }
     if (entities[entity].rightdown) {
-      entities[entity].x += 5;
+      entities[entity].x += 1;
     }
     var condition = false;
     for (var i = 0; i < platforms.length; i++) {
       if ((entities[entity].x > platforms[i].x) && (entities[entity].x < (platforms[i].x + 83)) && (entities[entity].y > platforms[i].y) && (entities[entity].y < (platforms[i].y + 9))) {
         if (entities[entity].yvelocity < 0) {
           entities[entity].yvelocity = 0;
-          entities[entity].y = platforms[i].y + 9;
+          entities[entity].y = platforms[i].y + 40;
         }
         else {
           condition = true;
@@ -98,7 +98,7 @@ function loop() {
       }
     }
     if (!condition) {
-      entities[entity].yvelocity += 0.5;
+      entities[entity].yvelocity += 0.1;
     }
   }
 }
