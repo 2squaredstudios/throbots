@@ -25,7 +25,7 @@ function disconnect() {
     });
   }
   else {
-    request('http://localhost:25568/leave?lennetlobbyid=' + address + '&entity=' + name, function(data) {
+    request('http://34.71.49.178:25568/leave?lennetlobbyid=' + address + '&entity=' + name, function(data) {
       document.location.href = 'index.html';
     });
   }
@@ -34,7 +34,7 @@ if (dedicated) {
   request('http://' + address + '/join?entity=' + name + '&player=' + player, function(data) {});
 }
 else {
-  request('http://localhost:25568/join?lennetlobbyid=' + address + '&entity=' + name + '&player=' + player, function(data) {
+  request('http://34.71.49.178:25568/join?lennetlobbyid=' + address + '&entity=' + name + '&player=' + player, function(data) {
     if (data == '404 lobby ' + address + ' not found') {
       alert('Could not find game: ' + data);
       document.location.href = 'index.html';
@@ -53,11 +53,11 @@ function loop() {
     });
   }
   else {
-    request('http://localhost:25568/getentities?lennetlobbyid=' + address, function(data) {
+    request('http://34.71.49.178:25568/getentities?lennetlobbyid=' + address, function(data) {
       entities = JSON.parse(data);
       console.log(entities);
     });
-    request('http://localhost:25568/getplatforms?lennetlobbyid=' + address, function(data) {
+    request('http://34.71.49.178:25568/getplatforms?lennetlobbyid=' + address, function(data) {
       platforms = JSON.parse(data);
     });
   }
@@ -80,7 +80,7 @@ document.onkeydown = function(event) {
       request('http://' + address + '/jump?entity=' + name, function() {});
     }
     else {
-      request('http://localhost:25568/jump?lennetlobbyid=' + address + '&entity=' + name, function() {});
+      request('http://34.71.49.178:25568/jump?lennetlobbyid=' + address + '&entity=' + name, function() {});
     }
   }
   if (event.code == 'KeyA') {
@@ -88,7 +88,7 @@ document.onkeydown = function(event) {
       request('http://' + address + '/leftdown?entity=' + name, function() {});
     }
     else {
-      request('http://localhost:25568/leftdown?lennetlobbyid=' + address + '&entity=' + name, function() {});
+      request('http://34.71.49.178:25568/leftdown?lennetlobbyid=' + address + '&entity=' + name, function() {});
     }
   }
   if (event.code == 'KeyD') {
@@ -96,7 +96,7 @@ document.onkeydown = function(event) {
       request('http://' + address + '/rightdown?entity=' + name, function() {});
     }
     else {
-      request('http://localhost:25568/rightdown?lennetlobbyid=' + address + '&entity=' + name, function() {});
+      request('http://34.71.49.178:25568/rightdown?lennetlobbyid=' + address + '&entity=' + name, function() {});
     }
   }
   }
@@ -110,7 +110,7 @@ document.onkeyup = function(event) {
       request('http://' + address + '/leftup?entity=' + name, function() {});
     }
     else {
-      request('http://localhost:25568/leftup?lennetlobbyid=' + address + '&entity=' + name, function() {});
+      request('http://34.71.49.178:25568/leftup?lennetlobbyid=' + address + '&entity=' + name, function() {});
     }
   }
   if (event.code == 'KeyD') {
@@ -118,7 +118,7 @@ document.onkeyup = function(event) {
       request('http://' + address + '/rightup?entity=' + name, function() {});
     }
     else {
-      request('http://localhost:25568/rightup?lennetlobbyid=' + address + '&entity=' + name, function() {});
+      request('http://34.71.49.178:25568/rightup?lennetlobbyid=' + address + '&entity=' + name, function() {});
     }
   }
 }

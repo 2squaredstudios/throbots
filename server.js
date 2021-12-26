@@ -10,11 +10,13 @@ var platforms = [{x: 200, y: 40}, {x: 120, y: 80}, {x: 40, y: 120}, {x: 0, y: 16
 http.server(process.argv[2],   function(req, res) {
   if (req.pathname == '/join') {
     entities[req.query.entity] = {x: 2, y: 2, yvelocity: 0, leftdown: false, rightdown: false, frame: 'player' + req.query.player + 'left'};
+    console.log(req.query.entity + ' joined the game!');
     res(200, 'text/plain', 'joined successfully');
   }
   else if (req.pathname == '/leave') {
     if (entities.hasOwnProperty(req.query.entity)) {
       delete entities[req.query.entity];
+      console.log(req.query.entity + ' left the game!');
       res(200, 'text/plain', 'left successfully');
     }
     else {
