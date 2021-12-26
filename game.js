@@ -1,22 +1,40 @@
 var searchParams = new URL(document.location.href).searchParams;
 var dedicated = searchParams.get('dedicated') == 'true';
-var skin = parseInt(searchParams.get('skin'));
+var player = parseInt(searchParams.get('player'));
 var address = searchParams.get('address');
 var name = searchParams.get('name');
 var ctx = $('#canvas').getContext('2d');
-var testimage = new Image();
-testimage.src = 'player0left.png';
+var images = {};
+for (var i = 0; i < 4; i++) {
+  images['player' + i + 'left'] = new Image();
+  images['player' + i + 'left'].src = 'player' + i + 'left.png';
+  images['player' + i + 'right'] = new Image();
+  images['player' + i + 'right'].src = 'player' + i + 'right.png';
+}
+images['player']
 var platform = new Image();
 platform.src = 'platform.png';
 var fpscounter = 0;
 var fpslimit = 0;
 var platforms = [];
 var entities = {};
+function disconnect() {
+  if (dedicated) {
+    request('http://' + address + '/leave?entity=' + name, function(data) {
+      document.location.href = 'index.html';
+    });
+  }
+  else {
+    request('http://localhost:25568/leave?lennetlobbyid=' + address + '&entity=' + name, function(data) {
+      document.location.href = 'index.html';
+    });
+  }
+}
 if (dedicated) {
-  request('http://' + address + '/join?entity=' + name, function(data) {});
+  request('http://' + address + '/join?entity=' + name + '&player=' + player, function(data) {});
 }
 else {
-  request('http://localhost:25568/join?lennetlobbyid=' + address + '&entity=' + name, function(data) {
+  request('http://localhost:25568/join?lennetlobbyid=' + address + '&entity=' + name + '&player=' + player, function(data) {
     if (data == '404 lobby ' + address + ' not found') {
       alert('Could not find game: ' + data);
       document.location.href = 'index.html';
@@ -48,10 +66,10 @@ function loop() {
       for (var j = 0; j < platforms.length; j++) {
         ctx.drawImage(platform, platforms[j].x - entities[entity].x + 114, platforms[j].y);
       }
-      ctx.drawImage(testimage, 100, entities[entity].y - 34);
+      ctx.drawImage(images[entities[entity].frame], 100, entities[entity].y - 34);
     }
     else {
-      ctx.drawImage(testimage, (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
+      ctx.drawImage(images[entities[entity].frame], (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
     }
   }
 }

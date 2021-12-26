@@ -9,8 +9,17 @@ var entities = {};
 var platforms = [{x: 200, y: 40}, {x: 120, y: 80}, {x: 40, y: 120}, {x: 0, y: 160}, {x: 200, y: 800}, {x: 400, y: 800}, {x: 600, y: 800}, {x: 800, y: 800}, {x: 1000, y: 800}, {x: 1200, y: 800}];
 http.server(process.argv[2],   function(req, res) {
   if (req.pathname == '/join') {
-    entities[req.query.entity] = {x: 2, y: 2, yvelocity: 0, leftdown: false, rightdown: false};
+    entities[req.query.entity] = {x: 2, y: 2, yvelocity: 0, leftdown: false, rightdown: false, frame: 'player' + req.query.player + 'left'};
     res(200, 'text/plain', 'joined successfully');
+  }
+  else if (req.pathname == '/leave') {
+    if (entities.hasOwnProperty(req.query.entity)) {
+      delete entities[req.query.entity];
+      res(200, 'text/plain', 'left successfully');
+    }
+    else {
+      res(404, 'text/plain', 'entity not found');
+    }
   }
   else if (req.pathname == '/getentities') {
     res(200, 'text/plain', JSON.stringify(entities));
@@ -21,6 +30,18 @@ http.server(process.argv[2],   function(req, res) {
   else if (req.pathname == '/leftdown') {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].leftdown = true;
+      if (entities[req.query.entity].frame.includes('0')) {
+        entities[req.query.entity].frame = 'player0left';
+      }
+      if (entities[req.query.entity].frame.includes('1')) {
+        entities[req.query.entity].frame = 'player1left';
+      }
+      if (entities[req.query.entity].frame.includes('2')) {
+        entities[req.query.entity].frame = 'player2left';
+      }
+      if (entities[req.query.entity].frame.includes('3')) {
+        entities[req.query.entity].frame = 'player3left';
+      }
       res(200, 'text/plain', 'ok');
     }
     else {
@@ -30,6 +51,18 @@ http.server(process.argv[2],   function(req, res) {
   else if (req.pathname == '/rightdown') {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].rightdown = true;
+      if (entities[req.query.entity].frame.includes('0')) {
+        entities[req.query.entity].frame = 'player0right';
+      }
+      if (entities[req.query.entity].frame.includes('1')) {
+        entities[req.query.entity].frame = 'player1right';
+      }
+      if (entities[req.query.entity].frame.includes('2')) {
+        entities[req.query.entity].frame = 'player2right';
+      }
+      if (entities[req.query.entity].frame.includes('3')) {
+        entities[req.query.entity].frame = 'player3right';
+      }
       res(200, 'text/plain', 'ok');
     }
     else {
