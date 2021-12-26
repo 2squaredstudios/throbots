@@ -31,7 +31,12 @@ function disconnect() {
   }
 }
 if (dedicated) {
-  request('http://' + address + '/join?entity=' + name + '&player=' + player, function(data) {});
+  request('http://' + address + '/join?entity=' + name + '&player=' + player, function(data) {
+    if (data == 'entity already exists') {
+      alert('There is already a player with name ' + name + '!');
+      document.location.href = 'index.html';
+    }
+  });
 }
 else {
   request('http://34.71.49.178:25568/join?lennetlobbyid=' + address + '&entity=' + name + '&player=' + player, function(data) {

@@ -9,9 +9,14 @@ var entities = {};
 var platforms = [{x: 200, y: 40}, {x: 120, y: 80}, {x: 40, y: 120}, {x: 0, y: 160}, {x: 200, y: 800}, {x: 400, y: 800}, {x: 600, y: 800}, {x: 800, y: 800}, {x: 1000, y: 800}, {x: 1200, y: 800}];
 http.server(process.argv[2],   function(req, res) {
   if (req.pathname == '/join') {
-    entities[req.query.entity] = {x: 2, y: 2, yvelocity: 0, leftdown: false, rightdown: false, frame: 'player' + req.query.player + 'left'};
-    console.log(req.query.entity + ' joined the game!');
-    res(200, 'text/plain', 'joined successfully');
+    if (entities.hasOwnProperty(req.query.entity)) {
+      res(400, 'text/plain', 'entity already exists');
+    }
+    else {
+      entities[req.query.entity] = {x: 2, y: 2, yvelocity: 0, leftdown: false, rightdown: false, frame: 'player' + req.query.player + 'left'};
+      console.log(req.query.entity + ' joined the game!');
+      res(200, 'text/plain', 'joined successfully');
+    }
   }
   else if (req.pathname == '/leave') {
     if (entities.hasOwnProperty(req.query.entity)) {
