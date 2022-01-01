@@ -7,13 +7,12 @@ var ctx = $('#canvas').getContext('2d');
 var images = {};
 for (var i = 0; i < 4; i++) {
   images['player' + i + 'left'] = new Image();
-  images['player' + i + 'left'].src = 'player' + i + 'left.png';
+  images['player' + i + 'left'].src = 'images/player' + i + 'left.png';
   images['player' + i + 'right'] = new Image();
-  images['player' + i + 'right'].src = 'player' + i + 'right.png';
+  images['player' + i + 'right'].src = 'images/player' + i + 'right.png';
 }
-images['player']
 var platform = new Image();
-platform.src = 'platform.png';
+platform.src = 'images/platform.png';
 var fpscounter = 0;
 var fpslimit = 0;
 var platforms = [];

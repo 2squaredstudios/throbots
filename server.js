@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 if (process.argv.length < 4) {
   console.log('Usage:');
   console.log('./server.js [port] [maxtps]');
