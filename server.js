@@ -4,7 +4,7 @@ if (process.argv.length < 4) {
 }
 else {
 var http = require('@thecoder08/http');
-var entities = {};
+var entities = {box0: {x: 2, y: 2, yvelocity: 0, frame: 'box0', thrownleft: false, thrownright: false}};
 var platforms = [{x: 200, y: 40}, {x: 120, y: 80}, {x: 40, y: 120}, {x: 0, y: 160}, {x: 200, y: 800}, {x: 400, y: 800}, {x: 600, y: 800}, {x: 800, y: 800}, {x: 1000, y: 800}, {x: 1200, y: 800}];
 http.server(process.argv[2],   function(req, res) {
   if (req.pathname == '/join') {
@@ -12,7 +12,7 @@ http.server(process.argv[2],   function(req, res) {
       res(400, 'text/plain', 'entity already exists');
     }
     else {
-      entities[req.query.entity] = {x: 2, y: 2, yvelocity: 0, leftdown: false, rightdown: false, frame: 'player' + req.query.player + 'left'};
+      entities[req.query.entity] = {x: 2, y: 2, yvelocity: 0, leftdown: false, rightdown: false, frame: 'player' + req.query.player + 'left', thrownleft: false, thrownright: false};
       console.log(req.query.entity + ' joined the game!');
       res(200, 'text/plain', 'joined successfully');
     }
@@ -107,6 +107,26 @@ http.server(process.argv[2],   function(req, res) {
       res(404, 'text/plain', 'entity not found');
     }
   }
+  else if (req.pathname == '/throwright') {
+    if (entities.hasOwnProperty(req.query.entity)) {
+      entities[req.query.entity].yvelocity = -4;
+      entities[req.query.entity].thrownright = true;
+      res(200, 'text/plain', 'ok');
+    }
+    else {
+      res(404, 'text/plain', 'entity not found');
+    }
+  }
+  else if (req.pathname == '/throwleft') {
+    if (entities.hasOwnProperty(req.query.entity)) {
+      entities[req.query.entity].yvelocity = -4;
+      entities[req.query.entity].thrownleft = true;
+      res(200, 'text/plain', 'ok');
+    }
+    else {
+      res(404, 'text/plain', 'entity not found');
+    }
+  }
   else {
     res(404, 'text/plain', '404 not found');
   }
@@ -116,15 +136,23 @@ function loop() {
   tps++;
   for (var entity in entities) {
     entities[entity].y += entities[entity].yvelocity;
-    if (entities[entity].leftdown) {
+    if (entities[entity].leftdown && !(entities[entity].thrownleft || entities[entity].thrownright)) {
       entities[entity].x -= 1;
     }
-    if (entities[entity].rightdown) {
+    if (entities[entity].rightdown && !(entities[entity].thrownleft || entities[entity].thrownright)) {
+      entities[entity].x += 1;
+    }
+    if (entities[entity].thrownleft) {
+      entities[entity].x -= 1;
+    }
+    if (entities[entity].thrownright) {
       entities[entity].x += 1;
     }
     var condition = false;
     for (var i = 0; i < platforms.length; i++) {
       if ((entities[entity].x > platforms[i].x) && (entities[entity].x < (platforms[i].x + 83)) && (entities[entity].y > platforms[i].y) && (entities[entity].y < (platforms[i].y + 9))) {
+        entities[entity].thrownleft = false;
+        entities[entity].thrownright = false;
         if (entities[entity].yvelocity < 0) {
           entities[entity].yvelocity = 0;
           entities[entity].y = platforms[i].y + 40;

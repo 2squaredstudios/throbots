@@ -11,6 +11,10 @@ for (var i = 0; i < 4; i++) {
   images['player' + i + 'right'] = new Image();
   images['player' + i + 'right'].src = 'images/player' + i + 'right.png';
 }
+for (var i = 0; i < 3; i++) {
+  images['box' + i] = new Image();
+  images['box' + i].src = 'images/box' + i + '.png'
+}
 var platform = new Image();
 platform.src = 'images/platform.png';
 var fpscounter = 0;
