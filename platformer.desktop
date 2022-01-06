@@ -4,6 +4,6 @@ Version=1.0
 Name=Platformer
 Comment=A cool game and stuff
 Exec=platformer
-Icon=/usr/lib/platformer-linux-x64/package.nw/images/player0right.png
+Icon=/usr/lib/platformer-linux-x64/package.nw/images/DESKTOP.png
 Terminal=false
 Categories=Game;
