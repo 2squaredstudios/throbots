@@ -4,19 +4,19 @@ var player = parseInt(searchParams.get('player'));
 var address = searchParams.get('address');
 var name = searchParams.get('name');
 var ctx = $('#canvas').getContext('2d');
+var theme = '';
 var images = {};
+function loadImage(image) {
+  images[image] = new Image();
+  images[image].src = 'images/' + image + '.png'
+}
 for (var i = 0; i < 4; i++) {
-  images['player' + i + 'left'] = new Image();
-  images['player' + i + 'left'].src = 'images/player' + i + 'left.png';
-  images['player' + i + 'right'] = new Image();
-  images['player' + i + 'right'].src = 'images/player' + i + 'right.png';
+  loadImage('player' + i + 'left');
+  loadImage('player' + i + 'right');
 }
 for (var i = 0; i < 3; i++) {
-  images['box' + i] = new Image();
-  images['box' + i].src = 'images/box' + i + '.png'
+  loadImage('box' + i);
 }
-var platform = new Image();
-platform.src = 'images/platform.png';
 var fpscounter = 0;
 var fpslimit = 0;
 var platforms = [];
@@ -39,6 +39,18 @@ if (dedicated) {
       alert('There is already a player with name ' + name + '!');
       document.location.href = 'index.html';
     }
+    else {
+      theme = data;
+      loadImage(theme);
+      loadImage(theme + 'platform');
+      var themesong = new Audio();
+      themesong.src = 'audio/' + theme + '.wav';
+      themesong.loop = true;
+      themesong.play();
+      images[theme].onload = function() {
+        gameloop = setInterval(loop, fpslimit);
+      }
+    }
   });
 }
 else {
@@ -46,6 +58,15 @@ else {
     if (data == '404 lobby ' + address + ' not found') {
       alert('Could not find game: ' + data);
       document.location.href = 'index.html';
+    }
+    else if (data == 'entity already exists') {
+      alert('There is already a player with name ' + name + '!');
+      document.location.href = 'index.html';
+    }
+    else {
+      theme = data;
+      loadImage(theme);
+      loadImage(theme + 'platform');
     }
   });
 }
@@ -63,16 +84,16 @@ function loop() {
   else {
     request('http://34.71.49.178:25568/getentities?lennetlobbyid=' + address, function(data) {
       entities = JSON.parse(data);
-      console.log(entities);
     });
     request('http://34.71.49.178:25568/getplatforms?lennetlobbyid=' + address, function(data) {
       platforms = JSON.parse(data);
     });
   }
+  ctx.drawImage(images[theme], 0, 0);
   for (var entity in entities) {
     if (entity == name) {
       for (var j = 0; j < platforms.length; j++) {
-        ctx.drawImage(platform, platforms[j].x - entities[entity].x + 114, platforms[j].y);
+        ctx.drawImage(images[theme + 'platform'], platforms[j].x - entities[entity].x + 114, platforms[j].y);
       }
       ctx.drawImage(images[entities[entity].frame], 100, entities[entity].y - 34);
     }
@@ -108,9 +129,6 @@ document.onkeydown = function(event) {
     }
   }
   }
-}
-platform.onload = function() {
-  gameloop = setInterval(loop, fpslimit);
 }
 document.onkeyup = function(event) {
   if (event.code == 'KeyA') {
