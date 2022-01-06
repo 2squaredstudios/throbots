@@ -43,6 +43,8 @@ if (dedicated) {
       theme = data;
       loadImage(theme);
       loadImage(theme + 'platform');
+      loadImage(theme + 'enemyleft');
+      loadImage(theme + 'enemyright');
       var themesong = new Audio();
       themesong.src = 'audio/' + theme + '.wav';
       themesong.loop = true;
@@ -67,6 +69,15 @@ else {
       theme = data;
       loadImage(theme);
       loadImage(theme + 'platform');
+      loadImage(theme + 'enemyleft');
+      loadImage(theme + 'enemyright');
+      var themesong = new Audio();
+      themesong.src = 'audio/' + theme + '.wav';
+      themesong.loop = true;
+      themesong.play();
+      images[theme].onload = function() {
+        gameloop = setInterval(loop, fpslimit);
+      }
     }
   });
 }
