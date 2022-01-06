@@ -48,79 +48,79 @@ jobs:
         run: rm nwjs-v0.55.0-linux-x64.tar.gz nwjs-v0.55.0-win-x64.zip nwjs-v0.55.0-linux-ia32.tar.gz nwjs-v0.55.0-win-ia32.zip nwjs-v0.55.0-osx-x64.zip
 
       - name: Rename and move NW.js directories
-        run: mv nwjs-v0.55.0-linux-x64 build/platformer-linux-x64 && mv nwjs-v0.55.0-win-x64 build/platformer-win-x64 && mv nwjs-v0.55.0-linux-ia32 build/platformer-linux-ia32 && mv nwjs-v0.55.0-win-ia32 build/platformer-win-ia32 && mv nwjs-v0.55.0-osx-x64/nwjs.app build/platformer.app
+        run: mv nwjs-v0.55.0-linux-x64 build/throbots-linux-x64 && mv nwjs-v0.55.0-win-x64 build/throbots-win-x64 && mv nwjs-v0.55.0-linux-ia32 build/throbots-linux-ia32 && mv nwjs-v0.55.0-win-ia32 build/throbots-win-ia32 && mv nwjs-v0.55.0-osx-x64/nwjs.app build/throbots.app
 
       - name: Create package.nw directories
-        run: mkdir build/platformer-linux-x64/package.nw && mkdir build/platformer-win-x64/package.nw && mkdir build/platformer-linux-ia32/package.nw && mkdir build/platformer-win-ia32/package.nw && mkdir build/platformer.app/Contents/Resources/app.nw
+        run: mkdir build/throbots-linux-x64/package.nw && mkdir build/throbots-win-x64/package.nw && mkdir build/throbots-linux-ia32/package.nw && mkdir build/throbots-win-ia32/package.nw && mkdir build/throbots.app/Contents/Resources/app.nw
 
       - name: Install dependencies
         run: npm i
 
       - name: Copy files to NW.js directories
-        run: cp -r $(ls | grep -v build) build/platformer-linux-x64/package.nw && cp -r $(ls | grep -v build) build/platformer-win-x64/package.nw && cp -r $(ls | grep -v build) build/platformer-linux-ia32/package.nw && cp -r $(ls | grep -v build) build/platformer-win-ia32/package.nw && cp -r $(ls | grep -v build) build/platformer.app/Contents/Resources/app.nw
+        run: cp -r $(ls | grep -v build) build/throbots-linux-x64/package.nw && cp -r $(ls | grep -v build) build/throbots-win-x64/package.nw && cp -r $(ls | grep -v build) build/throbots-linux-ia32/package.nw && cp -r $(ls | grep -v build) build/throbots-win-ia32/package.nw && cp -r $(ls | grep -v build) build/throbots.app/Contents/Resources/app.nw
 
       - name: Rename executables
-        run: mv build/platformer-linux-x64/nw build/platformer-linux-x64/platformer && mv build/platformer-linux-ia32/nw build/platformer-linux-ia32/platformer && mv build/platformer-win-x64/nw.exe build/platformer-win-x64/platformer.exe && mv build/platformer-win-ia32/nw.exe build/platformer-win-ia32/platformer.exe
+        run: mv build/throbots-linux-x64/nw build/throbots-linux-x64/throbots && mv build/throbots-linux-ia32/nw build/throbots-linux-ia32/throbots && mv build/throbots-win-x64/nw.exe build/throbots-win-x64/throbots.exe && mv build/throbots-win-ia32/nw.exe build/throbots-win-ia32/throbots.exe
 
       - name: Create Debian installer file structure
-        run: mkdir build/platformer-debian-x64 && mkdir build/platformer-debian-x64/usr && mkdir mkdir build/platformer-debian-x64/DEBIAN && mkdir build/platformer-debian-x64/usr/bin && mkdir build/platformer-debian-x64/usr/lib && mkdir build/platformer-debian-x64/usr/share && mkdir build/platformer-debian-x64/usr/share/applications
+        run: mkdir build/throbots-debian-x64 && mkdir build/throbots-debian-x64/usr && mkdir mkdir build/throbots-debian-x64/DEBIAN && mkdir build/throbots-debian-x64/usr/bin && mkdir build/throbots-debian-x64/usr/lib && mkdir build/throbots-debian-x64/usr/share && mkdir build/throbots-debian-x64/usr/share/applications
 
       - name: Copy Linux build to Debian installer
-        run: cp -r build/platformer-linux-x64 build/platformer-debian-x64/usr/lib
+        run: cp -r build/throbots-linux-x64 build/throbots-debian-x64/usr/lib
 
       - name: Create Symlink to command
-        run: cd build/platformer-debian-x64/usr/bin && ln -s ../lib/platformer-linux-x64/platformer
+        run: cd build/throbots-debian-x64/usr/bin && ln -s ../lib/throbots-linux-x64/throbots
 
       - name: Copy control file
-        run: cp DEBIAN/control build/platformer-debian-x64/DEBIAN
+        run: cp DEBIAN/control build/throbots-debian-x64/DEBIAN
 
       - name: Copy desktop file
-        run: cp platformer.desktop build/platformer-debian-x64/usr/share/applications
+        run: cp throbots.desktop build/throbots-debian-x64/usr/share/applications
 
       - name: Create Debian installer
-        run: cd build && dpkg-deb --build platformer-debian-x64
+        run: cd build && dpkg-deb --build throbots-debian-x64
 
       - name: Create Windows archives
-        run: cd build && zip -r platformer-win-x64.zip platformer-win-x64 && zip -r platformer-win-ia32.zip platformer-win-ia32
+        run: cd build && zip -r throbots-win-x64.zip throbots-win-x64 && zip -r throbots-win-ia32.zip throbots-win-ia32
 
       - name: Create Linux archives
-        run: cd build && tar -czvf platformer-linux-x64.tar.gz platformer-linux-x64 && tar -czvf platformer-linux-ia32.tar.gz platformer-linux-ia32
+        run: cd build && tar -czvf throbots-linux-x64.tar.gz throbots-linux-x64 && tar -czvf throbots-linux-ia32.tar.gz throbots-linux-ia32
 
       - name: Create MacOS archive
-        run: cd build && zip -r platformer-osx.zip platformer.app
+        run: cd build && zip -r throbots-osx.zip throbots.app
 
       - name: Upload Windows x64 build
         uses: actions/upload-artifact@v2
         with:
-          name: platformer-win-x64.zip
-          path: build/platformer-win-x64.zip
+          name: throbots-win-x64.zip
+          path: build/throbots-win-x64.zip
 
       - name: Upload Linux x64 build
         uses: actions/upload-artifact@v2
         with:
-          name: platformer-linux-x64.tar.gz
-          path: build/platformer-linux-x64.tar.gz
+          name: throbots-linux-x64.tar.gz
+          path: build/throbots-linux-x64.tar.gz
 
       - name: Upload Windows ia32 build
         uses: actions/upload-artifact@v2
         with:
-          name: platformer-win-ia32.zip
-          path: build/platformer-win-ia32.zip
+          name: throbots-win-ia32.zip
+          path: build/throbots-win-ia32.zip
 
       - name: Upload Linux ia32 build
         uses: actions/upload-artifact@v2
         with:
-          name: platformer-linux-ia32.tar.gz
-          path: build/platformer-linux-ia32.tar.gz
+          name: throbots-linux-ia32.tar.gz
+          path: build/throbots-linux-ia32.tar.gz
 
       - name: Upload Debian installer build
         uses: actions/upload-artifact@v2
         with:
-          name: platformer-debian-x64.deb
-          path: build/platformer-debian-x64.deb
+          name: throbots-debian-x64.deb
+          path: build/throbots-debian-x64.deb
 
       - name: Upload MacOS build
         uses: actions/upload-artifact@v2
         with:
-          name: platformer-osx.zip
-          path: build/platformer-osx.zip
+          name: throbots-osx.zip
+          path: build/throbots-osx.zip
