@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Version=1.0
-Name=Platformer
+Name=ThroBots
 Comment=A cool game and stuff
 Exec=platformer
 Icon=/usr/lib/platformer-linux-x64/package.nw/images/DESKTOP.png
