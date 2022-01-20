@@ -1,12 +1,19 @@
-if (process.argv.length < 4) {
+if (process.argv.length < 5) {
   console.log('Usage:');
-  console.log('./server.js [port] [maxtps]');
+  console.log('./server.js [port] [maxtps] [worldfile]');
 }
 else {
 var http = require('@thecoder08/http');
-var theme = 'jungle';
-var entities = {/*enemy0: {x: 2, y: 2, yvelocity: 0, leftdown: false, rightdown: false, frame: theme + 'enemyleft', thrownleft: false, thrownright: false},*/ box0: {x: 2, y: 2, yvelocity: 0, frame: 'box0', thrownleft: false, thrownright: false}};
-var platforms = [{x: 200, y: 40}, {x: 120, y: 80}, {x: 40, y: 120}, {x: 0, y: 160}, {x: 200, y: 800}, {x: 400, y: 800}, {x: 600, y: 800}, {x: 800, y: 800}, {x: 1000, y: 800}, {x: 1200, y: 800}];
+var fs = require('fs');
+fs.readFile(process.argv[4], function(err, data) {
+  if (err) {
+    console.log('Error reading world file!');
+  }
+  else {
+var world = JSON.parse(fs.readFileSync(process.argv[4]));
+var theme = world.theme;
+var entities = world.entities;
+var platforms = world.platforms;
 http.server(process.argv[2],   function(req, res) {
   if (req.pathname == '/join') {
     if (entities.hasOwnProperty(req.query.entity)) {
@@ -152,7 +159,7 @@ function loop() {
     var condition = false;
     for (var i = 0; i < platforms.length; i++) {
       if ((entities[entity].x > platforms[i].x) && (entities[entity].x < (platforms[i].x + 83)) && (entities[entity].y > platforms[i].y) && (entities[entity].y < (platforms[i].y + 9))) {
-        entities[entity].thrownleft = false;
+        entities[entity].thrownleft = false;4
         entities[entity].thrownright = false;
         if (entities[entity].yvelocity < 0) {
           entities[entity].yvelocity = 0;
@@ -175,4 +182,6 @@ setInterval(function() {
   tps = 0;
 }, 1000);
 setInterval(loop, 1000 / parseInt(process.argv[3]));
+}
+});
 }
