@@ -159,7 +159,7 @@ function loop() {
     var condition = false;
     for (var i = 0; i < platforms.length; i++) {
       if ((entities[entity].x > platforms[i].x) && (entities[entity].x < (platforms[i].x + 83)) && (entities[entity].y > platforms[i].y) && (entities[entity].y < (platforms[i].y + 9))) {
-        entities[entity].thrownleft = false;4
+        entities[entity].thrownleft = false;
         entities[entity].thrownright = false;
         if (entities[entity].yvelocity < 0) {
           entities[entity].yvelocity = 0;

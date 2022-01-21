@@ -101,16 +101,12 @@ function loop() {
     });
   }
   ctx.drawImage(images[theme], 0, 0);
+  for (var i = 0; i < platforms.length; i++) {
+    ctx.drawImage(images[theme + 'platform'], platforms[i].x - entities[name].x + 114, platforms[i].y);
+  }
   for (var entity in entities) {
-    if (entity == name) {
-      for (var j = 0; j < platforms.length; j++) {
-        ctx.drawImage(images[theme + 'platform'], platforms[j].x - entities[entity].x + 114, platforms[j].y);
-      }
-      ctx.drawImage(images[entities[entity].frame], 100, entities[entity].y - 34);
-    }
-    else {
-      ctx.drawImage(images[entities[entity].frame], (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
-    }
+    ctx.drawImage(images[entities[entity].frame], (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
+    ctx.fillText(entity, (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
   }
 }
 document.onkeydown = function(event) {

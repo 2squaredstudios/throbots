@@ -5,7 +5,22 @@
     <title>ThroBots - Level Builder</title>
   </head>
   <body>
+    <p><a href="index.html">Back</a></p>
     <h1>Level Builder</h1>
-    <canvas id="canvas" width="1000" height="1000" style="background: url('background.png');"></canvas>
+    <canvas id="canvas" width="1000" height="200" style="width: 2000px; height: 400px; image-rendering: pixelated;"></canvas>
+    <hr>
+    <button onclick="save();">Save Level</button><button onclick="load();">Load Level</button> Level Name: <input placeholder="My Awesome Level" id="name">
+    <hr>
+    Theme:<br>
+    Sky: <input type="radio" name="theme" value="sky" checked><br>
+    Desert: <input type="radio" name="theme" value="desert"><br>
+    Factory: <input type="radio" name="theme" value="factory"><br>
+    Snow: <input type="radio" name="theme" value="snow"><br>
+    Jungle: <input type="radio" name="theme" value="jungle"><br>
+    Cave: <input type="radio" name="theme" value="cave"><br>
+    <hr>
+    <button type="button" name="button">Entity</button><button type="button" name="button">Platform</button><button type="button" name="button">Erase</button>
+    <script src="node_modules/@thecoder08/docuget/main.js"></script>
+    <script src="levelbuilder.js"></script>
   </body>
 </html>
