@@ -7,11 +7,21 @@
   <body>
     <h1>ThroBots</h1>
     <h2>Join Game</h2>
+    <h3>Online Game</h3>
     <p>Connect to dedicated server (not recommended, unless you know what you're doing): <input type="checkbox" id="dedicated"></p>
     <p>Name: <input placeholder="John Doe" id="name"></p>
     <p><input id="address" placeholder="Lobby ID"><button onclick="player1();">Red</button><button onclick="player2();">Yellow</button><button onclick="player3();">Green</button><button onclick="player4();">Blue</button></p>
+    <h3>LAN Game</h3>
+    <p>Scanning for LAN games...</p>
+    <hr>
     <h2>Create Game</h2>
+    <h3>Online Game</h3>
     <p><button onclick="newGame();">Get Lobby ID</button></p>
+    <h3>LAN Game</h3>
+    <p>To create a LAN game, run the dedicated server on port 25500. You need node.js to run the dedicated server.</p>
+    <p>Use the command</p>
+    <code>node server.js 25500 60 [worldfile]</code>
+    <p>to run it with 60TPS and a world file that you specify.</p>
     <hr>
     <p><a href="levelbuilder.html">Level Builder</a></p>
     <hr>
