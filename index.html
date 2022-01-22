@@ -7,12 +7,13 @@
   <body>
     <h1>ThroBots</h1>
     <h2>Join Game</h2>
+    <p>Name: <input placeholder="John Doe" id="name"></p>
     <h3>Online Game</h3>
     <p>Connect to dedicated server (not recommended, unless you know what you're doing): <input type="checkbox" id="dedicated"></p>
-    <p>Name: <input placeholder="John Doe" id="name"></p>
     <p><input id="address" placeholder="Lobby ID"><button onclick="player1();">Red</button><button onclick="player2();">Yellow</button><button onclick="player3();">Green</button><button onclick="player4();">Blue</button></p>
     <h3>LAN Game</h3>
-    <p>Scanning for LAN games...</p>
+    <p><span id="status">Scanning for LAN games...</span><button onclick="refresh();">Refresh</button></p>
+    <p id="games"></p>
     <hr>
     <h2>Create Game</h2>
     <h3>Online Game</h3>
@@ -56,5 +57,6 @@
         });
       }
     </script>
+    <script src="lan.js"></script>
   </body>
 </html>
