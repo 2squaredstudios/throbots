@@ -11,6 +11,7 @@ fs.readFile(process.argv[4], function(err, data) {
   }
   else {
 var world = JSON.parse(fs.readFileSync(process.argv[4]));
+console.log('Loaded world ' + world.title);
 var theme = world.theme;
 var entities = world.entities;
 var platforms = world.platforms;
@@ -174,6 +175,10 @@ function loop() {
     }
     if (!condition) {
       entities[entity].yvelocity += 0.1;
+    }
+    if (entities[entity].y > 300) {
+      entities[entity].y = 0;
+      entities[entity].yvelocity = 0;
     }
   }
 }
