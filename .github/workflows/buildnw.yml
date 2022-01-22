@@ -57,7 +57,7 @@ jobs:
         run: npm i
 
       - name: Copy files to NW.js directories
-        run: cp -r $(ls | grep -v build) build/throbots-linux-x64/package.nw && cp -r $(ls | grep -v build) build/throbots-win-x64/package.nw && cp -r $(ls | grep -v build) build/throbots-linux-ia32/package.nw && cp -r $(ls | grep -v build) build/throbots-win-ia32/package.nw && cp -r $(ls | grep -v build) build/throbots.app/Contents/Resources/app.nw
+        run: cp -r $(ls | grep -v ^build$) build/throbots-linux-x64/package.nw && cp -r $(ls | grep -v ^build$) build/throbots-win-x64/package.nw && cp -r $(ls | grep -v ^build$) build/throbots-linux-ia32/package.nw && cp -r $(ls | grep -v ^build$) build/throbots-win-ia32/package.nw && cp -r $(ls | grep -v ^build$) build/throbots.app/Contents/Resources/app.nw
 
       - name: Rename executables
         run: mv build/throbots-linux-x64/nw build/throbots-linux-x64/throbots && mv build/throbots-linux-ia32/nw build/throbots-linux-ia32/throbots && mv build/throbots-win-x64/nw.exe build/throbots-win-x64/throbots.exe && mv build/throbots-win-ia32/nw.exe build/throbots-win-ia32/throbots.exe
