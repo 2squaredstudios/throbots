@@ -48,7 +48,7 @@ jobs:
         run: rm nwjs-v0.55.0-linux-x64.tar.gz nwjs-v0.55.0-win-x64.zip nwjs-v0.55.0-linux-ia32.tar.gz nwjs-v0.55.0-win-ia32.zip nwjs-v0.55.0-osx-x64.zip
 
       - name: Rename and move NW.js directories
-        run: mv nwjs-v0.55.0-linux-x64 build/throbots-linux-x64 && mv nwjs-v0.55.0-win-x64 build/throbots-win-x64 && mv nwjs-v0.55.0-linux-ia32 build/throbots-linux-ia32 && mv nwjs-v0.55.0-win-ia32 build/throbots-win-ia32 && mv nwjs-v0.55.0-osx-x64/nwjs.app build/throbots.app
+        run: mv nwjs-v0.55.0-linux-x64 build/throbots-linux-x64 && mv nwjs-v0.55.0-win-x64 build/throbots-win-x64 && mv nwjs-v0.55.0-linux-ia32 build/throbots-linux-ia32 && mv nwjs-v0.55.0-win-ia32 build/throbots-win-ia32 && mv nwjs-v0.55.0-osx-x64/nwjs.app build/throbots.app && rm -r nwjs-v0.55.0-osx-x64
 
       - name: Create package.nw directories
         run: mkdir build/throbots-linux-x64/package.nw && mkdir build/throbots-win-x64/package.nw && mkdir build/throbots-linux-ia32/package.nw && mkdir build/throbots-win-ia32/package.nw && mkdir build/throbots.app/Contents/Resources/app.nw
