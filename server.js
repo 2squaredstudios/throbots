@@ -21,7 +21,7 @@ http.server(process.argv[2],   function(req, res) {
       res(400, 'text/plain', 'entity already exists');
     }
     else {
-      entities[req.query.entity] = {x: 2, y: 2, yvelocity: 0, leftdown: false, rightdown: false, frame: 'player' + req.query.player + 'left', thrownleft: false, thrownright: false};
+      entities[req.query.entity] = {x: 5, y: 5, yvelocity: 0, leftdown: false, rightdown: false, frame: 'player' + req.query.player + 'left', thrownleft: false, thrownright: false};
       console.log(req.query.entity + ' joined the game!');
       res(200, 'text/plain', theme);
     }
@@ -187,6 +187,15 @@ setInterval(function() {
   tps = 0;
 }, 1000);
 setInterval(loop, 1000 / parseInt(process.argv[3]));
+process.stdin.on('data', function(data) {
+  if (entities.hasOwnProperty(data.toString().split('\n')[0])) {
+    delete entities[data.toString().split('\n')[0]];
+    console.log(data.toString().split('\n')[0] + ' left the game!');
+  }
+  else {
+    console.log('could not kick player ' + data.toString().split('\n')[0] + ', no player found');
+  }
+});
 }
 });
 }
