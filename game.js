@@ -4,6 +4,9 @@ var player = parseInt(searchParams.get('player'));
 var address = searchParams.get('address');
 var name = searchParams.get('name');
 var ctx = $('#canvas').getContext('2d');
+var fs = require('fs');
+var runScript = require('./speech.js');
+var speechBox = '';
 var theme = '';
 var images = {};
 function loadImage(image) {
@@ -101,6 +104,12 @@ function loop() {
     });
   }
   ctx.drawImage(images[theme], 0, 0);
+  var textLines = speechBox.split('\n');
+  var textY = 10;
+  for (var i = 0; i < textLines.length; i++) {
+    ctx.fillText(textLines[i], 5, textY);
+    textY += 10;
+  }
   for (var i = 0; i < platforms.length; i++) {
     ctx.drawImage(images[theme + 'platform'], platforms[i].x - entities[name].x + 114, platforms[i].y);
   }
@@ -111,6 +120,17 @@ function loop() {
 }
 document.onkeydown = function(event) {
   if (!event.repeat) {
+  if (event.code == 'KeyO') {
+    speechBox = '';
+    runScript(JSON.parse(fs.readFileSync('script.json')), function(char) {
+      if (char == 'clear') {
+        speechBox = '';
+      }
+      else {
+        speechBox += char;
+      }
+    });
+  }
   if (event.code == 'KeyW') {
     if (dedicated) {
       request('http://' + address + '/jump?entity=' + name, function() {});

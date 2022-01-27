@@ -1,0 +1,130 @@
+[
+  {
+    "type": "text",
+    "delay": 50,
+    "script": "Thats, "
+  },
+  {
+    "type": "wait",
+    "delay": 500
+  },
+  {
+    "type": "text",
+    "delay": 50,
+    "script": "like, "
+  },
+  {
+    "type": "wait",
+    "delay": 500
+  },
+  {
+    "type": "text",
+    "delay": 100,
+    "script": "AWESOME "
+  },
+  {
+    "type": "text",
+    "delay": 50,
+    "script": "bro!\n"
+  },
+  {
+    "type": "pause"
+  },
+  {
+    "type": "prompt",
+    "delay": 50,
+    "script": "What is your favorite color?\n",
+    "responses": [
+      {
+        "response": "red",
+        "result": [
+          {
+            "type": "text",
+            "delay": 200,
+            "script": "RED "
+          },
+          {
+            "type": "wait",
+            "delay": 1000
+          },
+          {
+            "type": "text",
+            "delay": 200,
+            "script": "IS "
+          },
+          {
+            "type": "wait",
+            "delay": 1000
+          },
+          {
+            "type": "text",
+            "delay": 200,
+            "script": "ANGER!!!!!\n"
+          }
+        ]
+      },
+      {
+        "response": "blue",
+        "result": [
+          {
+            "type": "text",
+            "delay": 50,
+            "script": "Cool! I like blue too!\n"
+          }
+        ]
+      },
+      {
+        "response": "yellow",
+        "result": [
+          {
+            "type": "text",
+            "delay": 100,
+            "script": "..."
+          },
+          {
+            "type": "pause"
+          },
+          {
+            "type": "text",
+            "delay": 100,
+            "script": "..."
+          },
+          {
+            "type": "pause"
+          },
+          {
+            "type": "text",
+            "delay": 100,
+            "script": "..."
+          },
+          {
+            "type": "pause"
+          },
+          {
+            "type": "text",
+            "delay": 1,
+            "script": "cringe\n"
+          }
+        ]
+      },
+      {
+        "response": "blorange",
+        "result": [
+          {
+            "type": "text",
+            "delay": 100,
+            "script": "WTF is blorange!?\n"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "pause"
+  },
+  {
+    "type": "text",
+    "delay": 50,
+    "script": "Alright, you should get back to your\nadventure.\n"
+  }
+]
