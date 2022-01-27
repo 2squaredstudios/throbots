@@ -146,16 +146,16 @@ function loop() {
   for (var entity in entities) {
     entities[entity].y += entities[entity].yvelocity;
     if (entities[entity].leftdown && !(entities[entity].thrownleft || entities[entity].thrownright)) {
-      entities[entity].x -= 1;
+      entities[entity].x--;
     }
     if (entities[entity].rightdown && !(entities[entity].thrownleft || entities[entity].thrownright)) {
-      entities[entity].x += 1;
+      entities[entity].x++;
     }
     if (entities[entity].thrownleft) {
-      entities[entity].x -= 1;
+      entities[entity].x--;
     }
     if (entities[entity].thrownright) {
-      entities[entity].x += 1;
+      entities[entity].x++;
     }
     var condition = false;
     for (var i = 0; i < platforms.length; i++) {

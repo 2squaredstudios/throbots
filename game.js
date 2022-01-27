@@ -1,3 +1,4 @@
+// global variables
 var searchParams = new URL(document.location.href).searchParams;
 var dedicated = searchParams.get('dedicated') == 'true';
 var player = parseInt(searchParams.get('player'));
@@ -9,6 +10,13 @@ var runScript = require('./speech.js');
 var speechBox = '';
 var theme = '';
 var images = {};
+var fpscounter = 0;
+var fpslimit = 1000 / 60;
+var platforms = [];
+var entities = {};
+var leftDown = false;
+var rightDown = false;
+// load game assets
 function loadImage(image) {
   images[image] = new Image();
   images[image].src = 'images/' + image + '.png'
@@ -20,10 +28,7 @@ for (var i = 0; i < 4; i++) {
 for (var i = 0; i < 3; i++) {
   loadImage('box' + i);
 }
-var fpscounter = 0;
-var fpslimit = 0;
-var platforms = [];
-var entities = {};
+// disconnect function
 function disconnect() {
   if (dedicated) {
     request('http://' + address + '/leave?entity=' + name, function(data) {
@@ -36,6 +41,7 @@ function disconnect() {
     });
   }
 }
+// join game
 if (dedicated) {
   request('http://' + address + '/join?entity=' + name + '&player=' + player, function(data) {
     if (data == 'entity already exists') {
@@ -44,6 +50,7 @@ if (dedicated) {
     }
     else {
       theme = data;
+      // load more assets
       loadImage(theme);
       loadImage(theme + 'platform');
       loadImage(theme + 'enemyleft');
@@ -70,6 +77,7 @@ else {
     }
     else {
       theme = data;
+      // load more assets
       loadImage(theme);
       loadImage(theme + 'platform');
       loadImage(theme + 'enemyleft');
@@ -84,9 +92,40 @@ else {
     }
   });
 }
+// game loop
 function loop() {
+  // client-side prediction
+  if (leftDown) {
+    entities[name].x--;
+  }
+  if (rightDown) {
+    entities[name].x++;
+  }
+  // clear canvas
   $('#canvas').width = $('#canvas').width;
+  // increment fps counter
   fpscounter++;
+  // draw background
+  ctx.drawImage(images[theme], 0, 0);
+  // draw speech
+  var textLines = speechBox.split('\n');
+  var textY = 10;
+  for (var i = 0; i < textLines.length; i++) {
+    ctx.fillText(textLines[i], 5, textY);
+    textY += 10;
+  }
+  // draw platforms
+  for (var i = 0; i < platforms.length; i++) {
+    ctx.drawImage(images[theme + 'platform'], platforms[i].x - entities[name].x + 114, platforms[i].y);
+  }
+  // draw players and nametags
+  for (var entity in entities) {
+    ctx.drawImage(images[entities[entity].frame], (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
+    ctx.fillText(entity, (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
+  }
+}
+// fetch loop
+function fetchloop() {
   if (dedicated) {
     request('http://' + address + '/getentities', function(data) {
       entities = JSON.parse(data);
@@ -103,21 +142,8 @@ function loop() {
       platforms = JSON.parse(data);
     });
   }
-  ctx.drawImage(images[theme], 0, 0);
-  var textLines = speechBox.split('\n');
-  var textY = 10;
-  for (var i = 0; i < textLines.length; i++) {
-    ctx.fillText(textLines[i], 5, textY);
-    textY += 10;
-  }
-  for (var i = 0; i < platforms.length; i++) {
-    ctx.drawImage(images[theme + 'platform'], platforms[i].x - entities[name].x + 114, platforms[i].y);
-  }
-  for (var entity in entities) {
-    ctx.drawImage(images[entities[entity].frame], (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
-    ctx.fillText(entity, (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
-  }
 }
+// keydown
 document.onkeydown = function(event) {
   if (!event.repeat) {
   if (event.code == 'KeyO') {
@@ -140,6 +166,7 @@ document.onkeydown = function(event) {
     }
   }
   if (event.code == 'KeyA') {
+    leftDown = true;
     if (dedicated) {
       request('http://' + address + '/leftdown?entity=' + name, function() {});
     }
@@ -148,6 +175,7 @@ document.onkeydown = function(event) {
     }
   }
   if (event.code == 'KeyD') {
+    rightDown = true;
     if (dedicated) {
       request('http://' + address + '/rightdown?entity=' + name, function() {});
     }
@@ -157,8 +185,10 @@ document.onkeydown = function(event) {
   }
   }
 }
+// keyup
 document.onkeyup = function(event) {
   if (event.code == 'KeyA') {
+    leftDown = false;
     if (dedicated) {
       request('http://' + address + '/leftup?entity=' + name, function() {});
     }
@@ -167,6 +197,7 @@ document.onkeyup = function(event) {
     }
   }
   if (event.code == 'KeyD') {
+    rightDown = false;
     if (dedicated) {
       request('http://' + address + '/rightup?entity=' + name, function() {});
     }
@@ -175,6 +206,7 @@ document.onkeyup = function(event) {
     }
   }
 }
+// gameloop controller
 setInterval(function() {
   $('#fps').innerHTML = fpscounter;
   fpscounter = 0;
@@ -191,3 +223,5 @@ $('#fpslimiter').oninput = function() {
   clearInterval(gameloop);
   gameloop = setInterval(loop, fpslimit);
 }
+// fetchloop controller
+setInterval(fetchloop, 1000 / 30);
