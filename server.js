@@ -177,7 +177,8 @@ function loop() {
       entities[entity].yvelocity += 0.1;
     }
     if (entities[entity].y > 300) {
-      entities[entity].y = 0;
+      entities[entity].y = 5;
+      entities[entity].x = 5;
       entities[entity].yvelocity = 0;
     }
   }
