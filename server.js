@@ -21,7 +21,7 @@ http.server(process.argv[2],   function(req, res) {
       res(400, 'text/plain', 'entity already exists');
     }
     else {
-      entities[req.query.entity] = {x: 5, y: 5, yvelocity: 0, leftdown: false, rightdown: false, frame: 'player' + req.query.player + '/still', thrownleft: false, thrownright: false};
+      entities[req.query.entity] = {x: 5, y: 5, yvelocity: 0, crouchdown: false, leftdown: false, rightdown: false, frame: 'player' + req.query.player + '/still', thrownleft: false, thrownright: false};
       console.log(req.query.entity + ' joined the game!');
       res(200, 'text/plain', theme);
     }
@@ -45,16 +45,16 @@ http.server(process.argv[2],   function(req, res) {
   else if (req.pathname == '/leftdown') {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].leftdown = true;
-      if (entities[req.query.entity].frame.includes('0')) {
+      if (entities[req.query.entity].frame.includes('player0/')) {
         entities[req.query.entity].frame = 'player0/left';
       }
-      if (entities[req.query.entity].frame.includes('1')) {
+      if (entities[req.query.entity].frame.includes('player1/')) {
         entities[req.query.entity].frame = 'player1/left';
       }
-      if (entities[req.query.entity].frame.includes('2')) {
+      if (entities[req.query.entity].frame.includes('player2/')) {
         entities[req.query.entity].frame = 'player2/left';
       }
-      if (entities[req.query.entity].frame.includes('3')) {
+      if (entities[req.query.entity].frame.includes('player3/')) {
         entities[req.query.entity].frame = 'player3/left';
       }
       res(200, 'text/plain', 'ok');
@@ -66,16 +66,16 @@ http.server(process.argv[2],   function(req, res) {
   else if (req.pathname == '/rightdown') {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].rightdown = true;
-      if (entities[req.query.entity].frame.includes('0')) {
+      if (entities[req.query.entity].frame.includes('player0/')) {
         entities[req.query.entity].frame = 'player0/right';
       }
-      if (entities[req.query.entity].frame.includes('1')) {
+      if (entities[req.query.entity].frame.includes('player1/')) {
         entities[req.query.entity].frame = 'player1/right';
       }
-      if (entities[req.query.entity].frame.includes('2')) {
+      if (entities[req.query.entity].frame.includes('player2/')) {
         entities[req.query.entity].frame = 'player2/right';
       }
-      if (entities[req.query.entity].frame.includes('3')) {
+      if (entities[req.query.entity].frame.includes('player3/')) {
         entities[req.query.entity].frame = 'player3/right';
       }
       res(200, 'text/plain', 'ok');
@@ -87,16 +87,16 @@ http.server(process.argv[2],   function(req, res) {
   else if (req.pathname == '/leftup') {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].leftdown = false;
-      if (entities[req.query.entity].frame.includes('0')) {
+      if (entities[req.query.entity].frame.includes('player0/')) {
         entities[req.query.entity].frame = 'player0/still';
       }
-      if (entities[req.query.entity].frame.includes('1')) {
+      if (entities[req.query.entity].frame.includes('player1/')) {
         entities[req.query.entity].frame = 'player1/still';
       }
-      if (entities[req.query.entity].frame.includes('2')) {
+      if (entities[req.query.entity].frame.includes('player2/')) {
         entities[req.query.entity].frame = 'player2/still';
       }
-      if (entities[req.query.entity].frame.includes('3')) {
+      if (entities[req.query.entity].frame.includes('player3/')) {
         entities[req.query.entity].frame = 'player3/still';
       }
       res(200, 'text/plain', 'ok');
@@ -108,16 +108,16 @@ http.server(process.argv[2],   function(req, res) {
   else if (req.pathname == '/rightup') {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].rightdown = false;
-      if (entities[req.query.entity].frame.includes('0')) {
+      if (entities[req.query.entity].frame.includes('player0/')) {
         entities[req.query.entity].frame = 'player0/still';
       }
-      if (entities[req.query.entity].frame.includes('1')) {
+      if (entities[req.query.entity].frame.includes('player1/')) {
         entities[req.query.entity].frame = 'player1/still';
       }
-      if (entities[req.query.entity].frame.includes('2')) {
+      if (entities[req.query.entity].frame.includes('player2/')) {
         entities[req.query.entity].frame = 'player2/still';
       }
-      if (entities[req.query.entity].frame.includes('3')) {
+      if (entities[req.query.entity].frame.includes('player3/')) {
         entities[req.query.entity].frame = 'player3/still';
       }
       res(200, 'text/plain', 'ok');
@@ -130,16 +130,16 @@ http.server(process.argv[2],   function(req, res) {
     if (entities.hasOwnProperty(req.query.entity)) {
       if (Math.floor(entities[req.query.entity].yvelocity) == 0) {
         entities[req.query.entity].yvelocity = -4;
-        if (entities[req.query.entity].frame.includes('0')) {
+        if (entities[req.query.entity].frame.includes('player0/')) {
           entities[req.query.entity].frame = 'player0/jump';
         }
-        if (entities[req.query.entity].frame.includes('1')) {
+        if (entities[req.query.entity].frame.includes('player1/')) {
           entities[req.query.entity].frame = 'player1/jump';
         }
-        if (entities[req.query.entity].frame.includes('2')) {
+        if (entities[req.query.entity].frame.includes('player2/')) {
           entities[req.query.entity].frame = 'player2/jump';
         }
-        if (entities[req.query.entity].frame.includes('3')) {
+        if (entities[req.query.entity].frame.includes('player3/')) {
           entities[req.query.entity].frame = 'player3/jump';
         }
         res(200, 'text/plain', 'ok');
@@ -172,6 +172,48 @@ http.server(process.argv[2],   function(req, res) {
       res(404, 'text/plain', 'entity not found');
     }
   }
+  else if (req.pathname == '/crouchdown') {
+    if (entities.hasOwnProperty(req.query.entity)) {
+      entities[req.query.entity].crouchdown = true;
+      if (entities[req.query.entity].frame.includes('player0/')) {
+        entities[req.query.entity].frame = 'player0/crouch';
+      }
+      if (entities[req.query.entity].frame.includes('player1/')) {
+        entities[req.query.entity].frame = 'player1/crouch';
+      }
+      if (entities[req.query.entity].frame.includes('player2/')) {
+        entities[req.query.entity].frame = 'player2/crouch';
+      }
+      if (entities[req.query.entity].frame.includes('player3/')) {
+        entities[req.query.entity].frame = 'player3/crouch';
+      }
+      res(200, 'text/plain', 'ok');
+    }
+    else {
+      res(404, 'text/plain', 'entity not found');
+    }
+  }
+  else if (req.pathname == '/crouchup') {
+    if (entities.hasOwnProperty(req.query.entity)) {
+      entities[req.query.entity].crouchdown = false;
+      if (entities[req.query.entity].frame.includes('player0/')) {
+        entities[req.query.entity].frame = 'player0/still';
+      }
+      if (entities[req.query.entity].frame.includes('player1/')) {
+        entities[req.query.entity].frame = 'player1/still';
+      }
+      if (entities[req.query.entity].frame.includes('player2/')) {
+        entities[req.query.entity].frame = 'player2/still';
+      }
+      if (entities[req.query.entity].frame.includes('player3/')) {
+        entities[req.query.entity].frame = 'player3/still';
+      }
+      res(200, 'text/plain', 'ok');
+    }
+    else {
+      res(404, 'text/plain', 'entity not found');
+    }
+  }
   else {
     res(404, 'text/plain', '404 not found');
   }
@@ -181,7 +223,7 @@ function loop() {
   tps++;
   for (var entity in entities) {
     entities[entity].y += entities[entity].yvelocity;
-    if (entities[entity].leftdown && !(entities[entity].thrownleft || entities[entity].thrownright)) {
+    if (entities[entity].leftdown && !(entities[entity].thrownleft || entities[entity].thrownright || entities[entity].crouchdown)) {
       entities[entity].x--;
     }
     if (entities[entity].rightdown && !(entities[entity].thrownleft || entities[entity].thrownright)) {

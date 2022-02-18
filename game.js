@@ -26,8 +26,10 @@ function loadImage(image) {
 for (var i = 0; i < 4; i++) {
   entityFrames['player' + i + '/still'] = 1;
   entityFrames['player' + i + '/jump'] = 1;
-  loadImage('player' + i + '/jump0');
+  entityFrames['player' + i + '/crouch'] = 1;
   loadImage('player' + i + '/still0');
+  loadImage('player' + i + '/jump0');
+  loadImage('player' + i + '/crouch0');
   if (i == 0) {
     entityFrames['player' + i + '/left'] = 3;
     entityFrames['player' + i + '/right'] = 3;
@@ -140,7 +142,6 @@ function loop() {
   }
   // draw entities and nametags
   for (var entity in entities) {
-    console.log(entities[entity].frame + (animationFrame % entityFrames[entities[entity].frame]));
     ctx.drawImage(images[entities[entity].frame + (animationFrame % entityFrames[entities[entity].frame])], (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
     ctx.fillText(entity, (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
   }
@@ -204,6 +205,15 @@ document.onkeydown = function(event) {
       request('http://34.71.49.178:25568/rightdown?lennetlobbyid=' + address + '&entity=' + name, function() {});
     }
   }
+  if (event.code == 'KeyS') {
+    rightDown = true;
+    if (dedicated) {
+      request('http://' + address + '/crouchdown?entity=' + name, function() {});
+    }
+    else {
+      request('http://34.71.49.178:25568/crouchdown?lennetlobbyid=' + address + '&entity=' + name, function() {});
+    }
+  }
   }
 }
 // keyup
@@ -224,6 +234,14 @@ document.onkeyup = function(event) {
     }
     else {
       request('http://34.71.49.178:25568/rightup?lennetlobbyid=' + address + '&entity=' + name, function() {});
+    }
+  }
+  if (event.code == 'KeyS') {
+    if (dedicated) {
+      request('http://' + address + '/crouchup?entity=' + name, function() {});
+    }
+    else {
+      request('http://34.71.49.178:25568/crouchup?lennetlobbyid=' + address + '&entity=' + name, function() {});
     }
   }
 }
