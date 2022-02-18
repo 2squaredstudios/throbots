@@ -14,16 +14,34 @@ var fpscounter = 0;
 var fpslimit = 1000 / 60;
 var platforms = [];
 var entities = {};
+var entityFrames = {};
 var leftDown = false;
 var rightDown = false;
+var animationFrame = 0;
 // load game assets
 function loadImage(image) {
   images[image] = new Image();
-  images[image].src = 'images/' + image + '.png'
+  images[image].src = 'images/' + image + '.png';
 }
 for (var i = 0; i < 4; i++) {
-  loadImage('player' + i + 'left');
-  loadImage('player' + i + 'right');
+  entityFrames['player' + i + '/still'] = 1;
+  loadImage('player' + i + '/still0');
+  if (i == 0) {
+    entityFrames['player' + i + '/left'] = 3;
+    entityFrames['player' + i + '/right'] = 3;
+    for (var j = 0; j < 3; j++) {
+      loadImage('player' + i + '/left' + j);
+      loadImage('player' + i + '/right' + j);
+    }
+  }
+  else {
+    entityFrames['player' + i + '/left'] = 2;
+    entityFrames['player' + i + '/right'] = 2;
+    for (var j = 0; j < 2; j++) {
+      loadImage('player' + i + '/left' + j);
+      loadImage('player' + i + '/right' + j);
+    }
+  }
 }
 for (var i = 0; i < 3; i++) {
   loadImage('box' + i);
@@ -50,7 +68,7 @@ if (dedicated) {
     }
     else {
       theme = data;
-      // load more assets
+      // load theme-specific assets
       loadImage(theme);
       loadImage(theme + 'platform');
       loadImage(theme + 'enemyleft');
@@ -77,7 +95,7 @@ else {
     }
     else {
       theme = data;
-      // load more assets
+      // load theme-specific assets
       loadImage(theme);
       loadImage(theme + 'platform');
       loadImage(theme + 'enemyleft');
@@ -118,9 +136,10 @@ function loop() {
   for (var i = 0; i < platforms.length; i++) {
     ctx.drawImage(images[theme + 'platform'], platforms[i].x - entities[name].x + 114, platforms[i].y);
   }
-  // draw players and nametags
+  // draw entities and nametags
   for (var entity in entities) {
-    ctx.drawImage(images[entities[entity].frame], (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
+    console.log(entities[entity].frame + (animationFrame % entityFrames[entities[entity].frame]));
+    ctx.drawImage(images[entities[entity].frame + (animationFrame % entityFrames[entities[entity].frame])], (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
     ctx.fillText(entity, (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
   }
 }
@@ -225,3 +244,7 @@ $('#fpslimiter').oninput = function() {
 }
 // fetchloop controller
 setInterval(fetchloop, 1000 / 30);
+// animation loop
+setInterval(function() {
+  animationFrame++;
+}, 125);

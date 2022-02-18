@@ -21,7 +21,7 @@ http.server(process.argv[2],   function(req, res) {
       res(400, 'text/plain', 'entity already exists');
     }
     else {
-      entities[req.query.entity] = {x: 5, y: 5, yvelocity: 0, leftdown: false, rightdown: false, frame: 'player' + req.query.player + 'left', thrownleft: false, thrownright: false};
+      entities[req.query.entity] = {x: 5, y: 5, yvelocity: 0, leftdown: false, rightdown: false, frame: 'player' + req.query.player + '/still', thrownleft: false, thrownright: false};
       console.log(req.query.entity + ' joined the game!');
       res(200, 'text/plain', theme);
     }
@@ -46,16 +46,16 @@ http.server(process.argv[2],   function(req, res) {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].leftdown = true;
       if (entities[req.query.entity].frame.includes('0')) {
-        entities[req.query.entity].frame = 'player0left';
+        entities[req.query.entity].frame = 'player0/left';
       }
       if (entities[req.query.entity].frame.includes('1')) {
-        entities[req.query.entity].frame = 'player1left';
+        entities[req.query.entity].frame = 'player1/left';
       }
       if (entities[req.query.entity].frame.includes('2')) {
-        entities[req.query.entity].frame = 'player2left';
+        entities[req.query.entity].frame = 'player2/left';
       }
       if (entities[req.query.entity].frame.includes('3')) {
-        entities[req.query.entity].frame = 'player3left';
+        entities[req.query.entity].frame = 'player3/left';
       }
       res(200, 'text/plain', 'ok');
     }
@@ -67,16 +67,16 @@ http.server(process.argv[2],   function(req, res) {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].rightdown = true;
       if (entities[req.query.entity].frame.includes('0')) {
-        entities[req.query.entity].frame = 'player0right';
+        entities[req.query.entity].frame = 'player0/right';
       }
       if (entities[req.query.entity].frame.includes('1')) {
-        entities[req.query.entity].frame = 'player1right';
+        entities[req.query.entity].frame = 'player1/right';
       }
       if (entities[req.query.entity].frame.includes('2')) {
-        entities[req.query.entity].frame = 'player2right';
+        entities[req.query.entity].frame = 'player2/right';
       }
       if (entities[req.query.entity].frame.includes('3')) {
-        entities[req.query.entity].frame = 'player3right';
+        entities[req.query.entity].frame = 'player3/right';
       }
       res(200, 'text/plain', 'ok');
     }
@@ -87,6 +87,18 @@ http.server(process.argv[2],   function(req, res) {
   else if (req.pathname == '/leftup') {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].leftdown = false;
+      if (entities[req.query.entity].frame.includes('0')) {
+        entities[req.query.entity].frame = 'player0/still';
+      }
+      if (entities[req.query.entity].frame.includes('1')) {
+        entities[req.query.entity].frame = 'player1/still';
+      }
+      if (entities[req.query.entity].frame.includes('2')) {
+        entities[req.query.entity].frame = 'player2/still';
+      }
+      if (entities[req.query.entity].frame.includes('3')) {
+        entities[req.query.entity].frame = 'player3/still';
+      }
       res(200, 'text/plain', 'ok');
     }
     else {
@@ -96,6 +108,18 @@ http.server(process.argv[2],   function(req, res) {
   else if (req.pathname == '/rightup') {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].rightdown = false;
+      if (entities[req.query.entity].frame.includes('0')) {
+        entities[req.query.entity].frame = 'player0/still';
+      }
+      if (entities[req.query.entity].frame.includes('1')) {
+        entities[req.query.entity].frame = 'player1/still';
+      }
+      if (entities[req.query.entity].frame.includes('2')) {
+        entities[req.query.entity].frame = 'player2/still';
+      }
+      if (entities[req.query.entity].frame.includes('3')) {
+        entities[req.query.entity].frame = 'player3/still';
+      }
       res(200, 'text/plain', 'ok');
     }
     else {
