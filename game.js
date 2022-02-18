@@ -25,6 +25,8 @@ function loadImage(image) {
 }
 for (var i = 0; i < 4; i++) {
   entityFrames['player' + i + '/still'] = 1;
+  entityFrames['player' + i + '/jump'] = 1;
+  loadImage('player' + i + '/jump0');
   loadImage('player' + i + '/still0');
   if (i == 0) {
     entityFrames['player' + i + '/left'] = 3;

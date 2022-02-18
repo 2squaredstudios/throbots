@@ -130,6 +130,18 @@ http.server(process.argv[2],   function(req, res) {
     if (entities.hasOwnProperty(req.query.entity)) {
       if (Math.floor(entities[req.query.entity].yvelocity) == 0) {
         entities[req.query.entity].yvelocity = -4;
+        if (entities[req.query.entity].frame.includes('0')) {
+          entities[req.query.entity].frame = 'player0/jump';
+        }
+        if (entities[req.query.entity].frame.includes('1')) {
+          entities[req.query.entity].frame = 'player1/jump';
+        }
+        if (entities[req.query.entity].frame.includes('2')) {
+          entities[req.query.entity].frame = 'player2/jump';
+        }
+        if (entities[req.query.entity].frame.includes('3')) {
+          entities[req.query.entity].frame = 'player3/jump';
+        }
         res(200, 'text/plain', 'ok');
       }
       else {
