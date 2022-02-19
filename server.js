@@ -129,20 +129,25 @@ http.server(process.argv[2],   function(req, res) {
   else if (req.pathname == '/jump') {
     if (entities.hasOwnProperty(req.query.entity)) {
       if (Math.floor(entities[req.query.entity].yvelocity) == 0) {
-        entities[req.query.entity].yvelocity = -4;
-        if (entities[req.query.entity].frame.includes('player0/')) {
-          entities[req.query.entity].frame = 'player0/jump';
+        if (entities[req.query.entity].crouchdown) {
+          res(400, 'text/plain', 'could not jump, crouched');
         }
-        if (entities[req.query.entity].frame.includes('player1/')) {
-          entities[req.query.entity].frame = 'player1/jump';
+        else {
+          entities[req.query.entity].yvelocity = -4;
+          if (entities[req.query.entity].frame.includes('player0/')) {
+            entities[req.query.entity].frame = 'player0/jump';
+          }
+          if (entities[req.query.entity].frame.includes('player1/')) {
+            entities[req.query.entity].frame = 'player1/jump';
+          }
+          if (entities[req.query.entity].frame.includes('player2/')) {
+            entities[req.query.entity].frame = 'player2/jump';
+          }
+          if (entities[req.query.entity].frame.includes('player3/')) {
+            entities[req.query.entity].frame = 'player3/jump';
+          }
+          res(200, 'text/plain', 'ok');
         }
-        if (entities[req.query.entity].frame.includes('player2/')) {
-          entities[req.query.entity].frame = 'player2/jump';
-        }
-        if (entities[req.query.entity].frame.includes('player3/')) {
-          entities[req.query.entity].frame = 'player3/jump';
-        }
-        res(200, 'text/plain', 'ok');
       }
       else {
         res(400, 'text/plain', 'could not jump, not on ground');
@@ -154,10 +159,15 @@ http.server(process.argv[2],   function(req, res) {
   }
   else if (req.pathname == '/throw') {
     if (entities.hasOwnProperty(req.query.entity)) {
-      entities[req.query.entity].yvelocity = parseInt(req.query.y);
-      entities[req.query.entity].xvelocity = parseInt(req.query.x);
-      entities[req.query.entity].thrown = true;
-      res(200, 'text/plain', 'ok');
+      if (entities[req.query.entity].crouchdown) {
+        res(400, 'text/plain', 'could not throw, crouched');
+      }
+      else {
+        entities[req.query.entity].yvelocity = parseInt(req.query.y);
+        entities[req.query.entity].xvelocity = parseInt(req.query.x);
+        entities[req.query.entity].thrown = true;
+        res(200, 'text/plain', 'ok');
+      }
     }
     else {
       res(404, 'text/plain', 'entity not found');
