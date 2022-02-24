@@ -28,6 +28,9 @@ loadImage('loading');
 images['loading'].onload = function() {
   ctx.drawImage(images['loading'], 0, 0);
 }
+// load image assets
+loadImage('dead');
+loadImage('deadtext');
 for (var i = 0; i < 4; i++) {
   entityFrames['player' + i + '/still'] = 1;
   entityFrames['player' + i + '/jump'] = 1;
@@ -76,6 +79,8 @@ if (dedicated) {
     }
     else {
       theme = data;
+      // initial fetch
+      fetchloop();
       // load theme-specific assets
       loadImage(theme);
       loadImage(theme + 'platform');
@@ -120,34 +125,48 @@ else {
 }
 // game loop
 function loop() {
-  // client-side prediction
-  if (leftDown) {
-    entities[name].x--;
+  if (entities.hasOwnProperty(name)) {
+    // client-side prediction
+    if (leftDown) {
+      entities[name].x--;
+    }
+    if (rightDown) {
+      entities[name].x++;
+    }
+    // clear canvas
+    $('#canvas').width = $('#canvas').width;
+    // increment fps counter
+    fpscounter++;
+    // draw background
+    ctx.drawImage(images[theme], 0, 0);
+    // draw speech
+    var textLines = speechBox.split('\n');
+    var textY = 10;
+    for (var i = 0; i < textLines.length; i++) {
+      ctx.fillText(textLines[i], 5, textY);
+      textY += 10;
+    }
+    // draw platforms
+    for (var i = 0; i < platforms.length; i++) {
+      ctx.drawImage(images[theme + 'platform'], platforms[i].x - entities[name].x + 114, platforms[i].y);
+    }
+    // draw entities and nametags
+    for (var entity in entities) {
+      ctx.drawImage(images[entities[entity].frame + (animationFrame % entityFrames[entities[entity].frame])], (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
+      ctx.fillText(entity, (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
+    }
   }
-  if (rightDown) {
-    entities[name].x++;
-  }
-  // clear canvas
-  $('#canvas').width = $('#canvas').width;
-  // increment fps counter
-  fpscounter++;
-  // draw background
-  ctx.drawImage(images[theme], 0, 0);
-  // draw speech
-  var textLines = speechBox.split('\n');
-  var textY = 10;
-  for (var i = 0; i < textLines.length; i++) {
-    ctx.fillText(textLines[i], 5, textY);
-    textY += 10;
-  }
-  // draw platforms
-  for (var i = 0; i < platforms.length; i++) {
-    ctx.drawImage(images[theme + 'platform'], platforms[i].x - entities[name].x + 114, platforms[i].y);
-  }
-  // draw entities and nametags
-  for (var entity in entities) {
-    ctx.drawImage(images[entities[entity].frame + (animationFrame % entityFrames[entities[entity].frame])], (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
-    ctx.fillText(entity, (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
+  // if we died or got kicked
+  else {
+    // stop the game from running
+    clearInterval(gameloop);
+    // display red background
+    ctx.drawImage(images['dead'], 0, 0);
+    // wait 2 seconds
+    setTimeout(function() {
+      // display death message
+      ctx.drawImage(images['deadtext'], 5, 90);
+    }, 1000);
   }
 }
 // fetch loop
@@ -265,6 +284,7 @@ $('#canvas').onclick = function(event) {
   if (distances.length > 0) {
     var closest = names[distances.indexOf(Math.min(...distances))];
     if (dedicated) {
+  clearInterval(gameloop);
       request('http://' + address + '/throw?entity=' + closest + '&x=' + clickX + '&y=' + clickY, function() {});
     }
     else {

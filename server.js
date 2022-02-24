@@ -39,18 +39,7 @@ http.server(process.argv[2],   function(req, res) {
   else if (req.pathname == '/leftdown') {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].leftdown = true;
-      if (entities[req.query.entity].frame.includes('player0/')) {
-        entities[req.query.entity].frame = 'player0/left';
-      }
-      if (entities[req.query.entity].frame.includes('player1/')) {
-        entities[req.query.entity].frame = 'player1/left';
-      }
-      if (entities[req.query.entity].frame.includes('player2/')) {
-        entities[req.query.entity].frame = 'player2/left';
-      }
-      if (entities[req.query.entity].frame.includes('player3/')) {
-        entities[req.query.entity].frame = 'player3/left';
-      }
+      setFrame(req.query.entity, 'left');
       res(200, 'text/plain', 'ok');
     }
     else {
@@ -60,18 +49,7 @@ http.server(process.argv[2],   function(req, res) {
   else if (req.pathname == '/rightdown') {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].rightdown = true;
-      if (entities[req.query.entity].frame.includes('player0/')) {
-        entities[req.query.entity].frame = 'player0/right';
-      }
-      if (entities[req.query.entity].frame.includes('player1/')) {
-        entities[req.query.entity].frame = 'player1/right';
-      }
-      if (entities[req.query.entity].frame.includes('player2/')) {
-        entities[req.query.entity].frame = 'player2/right';
-      }
-      if (entities[req.query.entity].frame.includes('player3/')) {
-        entities[req.query.entity].frame = 'player3/right';
-      }
+      setFrame(req.query.entity, 'right');
       res(200, 'text/plain', 'ok');
     }
     else {
@@ -81,18 +59,7 @@ http.server(process.argv[2],   function(req, res) {
   else if (req.pathname == '/leftup') {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].leftdown = false;
-      if (entities[req.query.entity].frame.includes('player0/')) {
-        entities[req.query.entity].frame = 'player0/still';
-      }
-      if (entities[req.query.entity].frame.includes('player1/')) {
-        entities[req.query.entity].frame = 'player1/still';
-      }
-      if (entities[req.query.entity].frame.includes('player2/')) {
-        entities[req.query.entity].frame = 'player2/still';
-      }
-      if (entities[req.query.entity].frame.includes('player3/')) {
-        entities[req.query.entity].frame = 'player3/still';
-      }
+      setFrame(req.query.entity, 'still');
       res(200, 'text/plain', 'ok');
     }
     else {
@@ -102,18 +69,7 @@ http.server(process.argv[2],   function(req, res) {
   else if (req.pathname == '/rightup') {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].rightdown = false;
-      if (entities[req.query.entity].frame.includes('player0/')) {
-        entities[req.query.entity].frame = 'player0/still';
-      }
-      if (entities[req.query.entity].frame.includes('player1/')) {
-        entities[req.query.entity].frame = 'player1/still';
-      }
-      if (entities[req.query.entity].frame.includes('player2/')) {
-        entities[req.query.entity].frame = 'player2/still';
-      }
-      if (entities[req.query.entity].frame.includes('player3/')) {
-        entities[req.query.entity].frame = 'player3/still';
-      }
+      setFrame(req.query.entity, 'still');
       res(200, 'text/plain', 'ok');
     }
     else {
@@ -128,18 +84,7 @@ http.server(process.argv[2],   function(req, res) {
         }
         else {
           entities[req.query.entity].yvelocity = -4;
-          if (entities[req.query.entity].frame.includes('player0/')) {
-            entities[req.query.entity].frame = 'player0/jump';
-          }
-          if (entities[req.query.entity].frame.includes('player1/')) {
-            entities[req.query.entity].frame = 'player1/jump';
-          }
-          if (entities[req.query.entity].frame.includes('player2/')) {
-            entities[req.query.entity].frame = 'player2/jump';
-          }
-          if (entities[req.query.entity].frame.includes('player3/')) {
-            entities[req.query.entity].frame = 'player3/jump';
-          }
+          setFrame(req.query.entity, 'jump');
           res(200, 'text/plain', 'ok');
         }
       }
@@ -170,18 +115,7 @@ http.server(process.argv[2],   function(req, res) {
   else if (req.pathname == '/crouchdown') {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].crouchdown = true;
-      if (entities[req.query.entity].frame.includes('player0/')) {
-        entities[req.query.entity].frame = 'player0/crouch';
-      }
-      if (entities[req.query.entity].frame.includes('player1/')) {
-        entities[req.query.entity].frame = 'player1/crouch';
-      }
-      if (entities[req.query.entity].frame.includes('player2/')) {
-        entities[req.query.entity].frame = 'player2/crouch';
-      }
-      if (entities[req.query.entity].frame.includes('player3/')) {
-        entities[req.query.entity].frame = 'player3/crouch';
-      }
+      setFrame(req.query.entity, 'crouch');
       res(200, 'text/plain', 'ok');
     }
     else {
@@ -191,18 +125,7 @@ http.server(process.argv[2],   function(req, res) {
   else if (req.pathname == '/crouchup') {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].crouchdown = false;
-      if (entities[req.query.entity].frame.includes('player0/')) {
-        entities[req.query.entity].frame = 'player0/still';
-      }
-      if (entities[req.query.entity].frame.includes('player1/')) {
-        entities[req.query.entity].frame = 'player1/still';
-      }
-      if (entities[req.query.entity].frame.includes('player2/')) {
-        entities[req.query.entity].frame = 'player2/still';
-      }
-      if (entities[req.query.entity].frame.includes('player3/')) {
-        entities[req.query.entity].frame = 'player3/still';
-      }
+      setFrame(req.query.entity, 'still');
       res(200, 'text/plain', 'ok');
     }
     else {
@@ -236,6 +159,15 @@ function loop() {
       if ((entities[entity].x > platforms[i].x) && (entities[entity].x < (platforms[i].x + 83)) && (entities[entity].y > platforms[i].y) && (entities[entity].y < (platforms[i].y + 9))) {
         entities[entity].thrown = false;
         entities[entity].xvelocity = 0;
+        if (entities[entity].rightdown) {
+          setFrame(entity, 'right');
+        }
+        else if (entities[entity].leftdown) {
+          setFrame(entity, 'left');
+        }
+        else {
+          setFrame(entity, 'still');
+        }
         if (entities[entity].yvelocity < 0) {
           entities[entity].yvelocity = 0;
           entities[entity].y = platforms[i].y + 40;
@@ -251,9 +183,8 @@ function loop() {
       entities[entity].yvelocity += 0.1;
     }
     if (entities[entity].y > 300) {
-      entities[entity].y = 5;
-      entities[entity].x = 5;
-      entities[entity].yvelocity = 0;
+      delete entities[entity];
+      console.log(entity + ' was yeeted off a cliff!');
     }
   }
 }
@@ -271,4 +202,18 @@ process.stdin.on('data', function(data) {
     console.log('could not kick player ' + data.toString().split('\n')[0] + ', no player found');
   }
 });
+}
+function setFrame(entity, frame) {
+  if (entities[entity].frame.includes('player0/')) {
+    entities[entity].frame = 'player0/' + frame;
+  }
+  if (entities[entity].frame.includes('player1/')) {
+    entities[entity].frame = 'player1/' + frame;
+  }
+  if (entities[entity].frame.includes('player2/')) {
+    entities[entity].frame = 'player2/' + frame;
+  }
+  if (entities[entity].frame.includes('player3/')) {
+    entities[entity].frame = 'player3/' + frame;
+  }
 }
