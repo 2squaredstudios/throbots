@@ -9,6 +9,7 @@ var fs = require('fs');
 var runScript = require('./speech.js');
 var speechBox = '';
 var theme = '';
+var themesong = new Audio();
 var images = {};
 var fpscounter = 0;
 var fpslimit = 1000 / 60;
@@ -86,7 +87,6 @@ if (dedicated) {
       loadImage(theme + 'platform');
       loadImage(theme + 'enemyleft');
       loadImage(theme + 'enemyright');
-      var themesong = new Audio();
       themesong.src = 'audio/' + theme + '.wav';
       themesong.loop = true;
       themesong.play();
@@ -162,10 +162,16 @@ function loop() {
     clearInterval(gameloop);
     // display red background
     ctx.drawImage(images['dead'], 0, 0);
-    // wait 2 seconds
+    // stop theme song
+    themesong.pause();
+    // wait 1 second
     setTimeout(function() {
       // display death message
       ctx.drawImage(images['deadtext'], 5, 90);
+      // play death song
+      var deathsong = new Audio();
+      deathsong.src = 'audio/death.wav';
+      deathsong.play();
     }, 1000);
   }
 }
