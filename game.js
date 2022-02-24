@@ -18,10 +18,15 @@ var entityFrames = {};
 var leftDown = false;
 var rightDown = false;
 var animationFrame = 0;
-// load game assets
+// function for loading images
 function loadImage(image) {
   images[image] = new Image();
   images[image].src = 'images/' + image + '.png';
+}
+// loading screen
+loadImage('loading');
+images['loading'].onload = function() {
+  ctx.drawImage(images['loading'], 0, 0);
 }
 for (var i = 0; i < 4; i++) {
   entityFrames['player' + i + '/still'] = 1;

@@ -3,18 +3,12 @@ if (process.argv.length < 5) {
   console.log('./server.js [port] [maxtps] [worldfile]');
 }
 else {
+console.log('Loading...');
 var http = require('@thecoder08/http');
-var fs = require('fs');
-fs.readFile(process.argv[4], function(err, data) {
-  if (err) {
-    console.log('Error reading world file!');
-  }
-  else {
-var world = JSON.parse(fs.readFileSync(process.argv[4]));
-console.log('Loaded world ' + world.title);
-var theme = world.theme;
+var world = require('./' + process.argv[4]);
 var entities = world.entities;
 var platforms = world.platforms;
+console.log('Loaded world ' + world.title);
 http.server(process.argv[2],   function(req, res) {
   if (req.pathname == '/join') {
     if (entities.hasOwnProperty(req.query.entity)) {
@@ -23,7 +17,7 @@ http.server(process.argv[2],   function(req, res) {
     else {
       entities[req.query.entity] = {x: 5, y: 5, yvelocity: 0, xvelocity: 0, crouchdown: false, leftdown: false, rightdown: false, frame: 'player' + req.query.player + '/still', thrown: false};
       console.log(req.query.entity + ' joined the game!');
-      res(200, 'text/plain', theme);
+      res(200, 'text/plain', world.theme);
     }
   }
   else if (req.pathname == '/leave') {
@@ -276,7 +270,5 @@ process.stdin.on('data', function(data) {
   else {
     console.log('could not kick player ' + data.toString().split('\n')[0] + ', no player found');
   }
-});
-}
 });
 }
