@@ -102,10 +102,25 @@ http.server(process.argv[2],   function(req, res) {
         res(400, 'text/plain', 'could not throw, crouched');
       }
       else {
-        entities[req.query.entity].yvelocity = parseInt(req.query.y);
-        entities[req.query.entity].xvelocity = parseInt(req.query.x);
-        entities[req.query.entity].thrown = true;
-        res(200, 'text/plain', 'ok');
+        var distances = [];
+        var names = [];
+        for (var entity in entities) {
+          var distance = Math.hypot(entities[entity].x - entities[req.query.entity].x, entities[entity].y - entities[req.query.entity].y);
+          if ((entity != req.query.entity) && (distance < 100)) {
+            names.push(entity);
+            distances.push(distance);
+          }
+        }
+        if (distances.length > 0) {
+          var closest = names[distances.indexOf(Math.min(...distances))];
+          entities[closest].yvelocity = parseInt(req.query.y);
+          entities[closest].xvelocity = parseInt(req.query.x);
+          entities[closest].thrown = true;
+          res(200, 'text/plain', 'ok');
+        }
+        else {
+          res(400, 'text/plain', 'no throwable entities');
+        }
       }
     }
     else {

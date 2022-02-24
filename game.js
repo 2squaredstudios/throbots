@@ -273,23 +273,11 @@ $('#canvas').onclick = function(event) {
   var rect = canvas.getBoundingClientRect();
   var clickX = Math.floor((event.clientX - rect.left) / 100) - 5;
   var clickY = Math.floor((event.clientY - rect.top) / 100) - 5;
-  var distances = [];
-  var names = [];
-  for (var entity in entities) {
-    if (entity != name) {
-      names.push(entity);
-      distances.push(Math.hypot(entities[entity].x - entities[name].x, entities[entity].y - entities[name].y));
-    }
+  if (dedicated) {
+    request('http://' + address + '/throw?entity=' + name + '&x=' + clickX + '&y=' + clickY, function() {});
   }
-  if (distances.length > 0) {
-    var closest = names[distances.indexOf(Math.min(...distances))];
-    if (dedicated) {
-  clearInterval(gameloop);
-      request('http://' + address + '/throw?entity=' + closest + '&x=' + clickX + '&y=' + clickY, function() {});
-    }
-    else {
-      request('http://34.71.49.178:25568/throw?lennetlobbyid=' + address + '&entity=' + closest + '&x=' + clickX + '&y=' + clickY, function() {});
-    }
+  else {
+    request('http://34.71.49.178:25568/throw?lennetlobbyid=' + address + '&entity=' + name + '&x=' + clickX + '&y=' + clickY, function() {});
   }
 }
 // gameloop controller
