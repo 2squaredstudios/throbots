@@ -7,6 +7,59 @@ console.log('Loading...');
 var http = require('@thecoder08/http');
 var world = require('./' + process.argv[4]);
 var entities = world.entities;
+for (var entity in entities) {
+  if (entities[entity].hasOwnProperty('script')) {
+    var script = {
+      left: function() {
+        if (entities.hasOwnProperty(entity)) {
+          script.stop();
+          entities[entity].leftdown = true;
+        }
+      },
+      right: function() {
+        if (entities.hasOwnProperty(entity)) {
+          script.stop();
+          entities[entity].rightdown = true;
+        }
+      },
+      stop: function() {
+        if (entities.hasOwnProperty(entity)) {
+          entities[entity].leftdown = false;
+          entities[entity].rightdown = false;
+          entities[entity].crouchdown = false;
+        }
+      },
+      jump: function() {
+        if (entities.hasOwnProperty(entity)) {
+          if (Math.floor(entities[entity].yvelocity) == 0) {
+            if (entities[entity].crouchdown) {
+              return false;
+            }
+            else {
+              entities[entities].yvelocity = -4;
+              return true;
+            }
+          }
+          else {
+            return false;
+          }
+        }
+      },
+      crouch: function() {
+        if (entities.hasOwnProperty(entity)) {
+          script.stop();
+          entities[entity].crouchdown = true;
+        }
+      },
+      setFrame: function(frame) {
+        if (entities.hasOwnProperty(entity)) {
+          entities[entity].frame = frame;
+        }
+      }
+    }
+    eval(entities[entity].script);
+  }
+}
 var platforms = world.platforms;
 console.log('Loaded world ' + world.title);
 http.server(process.argv[2],   function(req, res) {

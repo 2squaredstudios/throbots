@@ -235,7 +235,6 @@ document.onkeydown = function(event) {
     }
   }
   if (event.code == 'KeyS') {
-    rightDown = true;
     if (dedicated) {
       request('http://' + address + '/crouchdown?entity=' + name, function() {});
     }
