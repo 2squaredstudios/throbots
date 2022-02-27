@@ -227,7 +227,10 @@ function loop() {
       if ((entities[entity].x > platforms[i].x) && (entities[entity].x < (platforms[i].x + 83)) && (entities[entity].y > platforms[i].y) && (entities[entity].y < (platforms[i].y + 9))) {
         entities[entity].thrown = false;
         entities[entity].xvelocity = 0;
-        if (entities[entity].rightdown) {
+        if (entities[entity].crouchdown) {
+          setFrame(entity, 'crouch');
+        }
+        else if (entities[entity].rightdown) {
           setFrame(entity, 'right');
         }
         else if (entities[entity].leftdown) {
@@ -262,12 +265,13 @@ setInterval(function() {
 }, 1000);
 setInterval(loop, 1000 / parseInt(process.argv[3]));
 process.stdin.on('data', function(data) {
-  if (entities.hasOwnProperty(data.toString().split('\n')[0])) {
-    delete entities[data.toString().split('\n')[0]];
-    console.log(data.toString().split('\n')[0] + ' left the game!');
+  var kickee = data.toString().split('\n')[0];
+  if (entities.hasOwnProperty(kickee)) {
+    delete entities[kickee];
+    console.log(kickee + ' was kicked from the server!');
   }
   else {
-    console.log('could not kick player ' + data.toString().split('\n')[0] + ', no player found');
+    console.log('could not kick player ' + kickee + ', no player found');
   }
 });
 }
