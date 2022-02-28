@@ -3,10 +3,14 @@ if (process.argv.length < 5) {
   console.log('./server.js [port] [maxtps] [worldfile]');
 }
 else {
+var tps = 0;
+// load world file
 console.log('Loading...');
 var http = require('@thecoder08/http');
 var world = require('./' + process.argv[4]);
 var entities = world.entities;
+var platforms = world.platforms;
+// run entity scripts (enemy logic)
 for (var entity in entities) {
   if (entities[entity].hasOwnProperty('script')) {
     var script = {
@@ -60,9 +64,10 @@ for (var entity in entities) {
     eval(entities[entity].script);
   }
 }
-var platforms = world.platforms;
 console.log('Loaded world ' + world.title);
+// create server that gets requests from users
 http.server(process.argv[2],   function(req, res) {
+  // join request
   if (req.pathname == '/join') {
     if (entities.hasOwnProperty(req.query.entity)) {
       res(400, 'text/plain', 'entity already exists');
@@ -73,6 +78,7 @@ http.server(process.argv[2],   function(req, res) {
       res(200, 'text/plain', world.theme);
     }
   }
+  // leave request
   else if (req.pathname == '/leave') {
     if (entities.hasOwnProperty(req.query.entity)) {
       delete entities[req.query.entity];
@@ -83,12 +89,15 @@ http.server(process.argv[2],   function(req, res) {
       res(404, 'text/plain', 'entity not found');
     }
   }
+  // get entities request
   else if (req.pathname == '/getentities') {
     res(200, 'text/plain', JSON.stringify(entities));
   }
+  // get platforms request
   else if (req.pathname == '/getplatforms') {
     res(200, 'text/plain', JSON.stringify(platforms));
   }
+  // keystokes
   else if (req.pathname == '/leftdown') {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].leftdown = true;
@@ -129,6 +138,7 @@ http.server(process.argv[2],   function(req, res) {
       res(404, 'text/plain', 'entity not found');
     }
   }
+  // jump
   else if (req.pathname == '/jump') {
     if (entities.hasOwnProperty(req.query.entity)) {
       if (Math.floor(entities[req.query.entity].yvelocity) == 0) {
@@ -149,6 +159,7 @@ http.server(process.argv[2],   function(req, res) {
       res(404, 'text/plain', 'entity not found');
     }
   }
+  // throwing
   else if (req.pathname == '/throw') {
     if (entities.hasOwnProperty(req.query.entity)) {
       if (entities[req.query.entity].crouchdown) {
@@ -180,6 +191,7 @@ http.server(process.argv[2],   function(req, res) {
       res(404, 'text/plain', 'entity not found');
     }
   }
+  // crouching
   else if (req.pathname == '/crouchdown') {
     if (entities.hasOwnProperty(req.query.entity)) {
       entities[req.query.entity].crouchdown = true;
@@ -200,13 +212,16 @@ http.server(process.argv[2],   function(req, res) {
       res(404, 'text/plain', 'entity not found');
     }
   }
+  // if we receive an unknown request, return 404 not found
   else {
     res(404, 'text/plain', '404 not found');
   }
 });
-var tps = 0;
+// tick loop
 function loop() {
+  // increment tps counter
   tps++;
+  // loop through all entities
   for (var entity in entities) {
     entities[entity].x += entities[entity].xvelocity;
     if (entities[entity].xvelocity > 0) {
@@ -259,11 +274,13 @@ function loop() {
     }
   }
 }
+// interval controllers
 setInterval(function() {
   process.stdout.write('TPS: ' + tps + '\r');
   tps = 0;
 }, 1000);
 setInterval(loop, 1000 / parseInt(process.argv[3]));
+// kicking
 process.stdin.on('data', function(data) {
   var kickee = data.toString().split('\n')[0];
   if (entities.hasOwnProperty(kickee)) {
@@ -275,6 +292,7 @@ process.stdin.on('data', function(data) {
   }
 });
 }
+// setFrame function
 function setFrame(entity, frame) {
   if (entities[entity].frame.includes('player0/')) {
     entities[entity].frame = 'player0/' + frame;
