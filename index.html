@@ -31,17 +31,38 @@
     <script src="node_modules/@thecoder08/http/browser.js"></script>
     <script src="node_modules/@thecoder08/docuget/main.js"></script>
     <script>
+      var lennetServer = '';
       function player1() {
-        document.location.href = 'game.html?name=' + $('#name').value + '&player=0&address=' + $('#address').value + '&dedicated=' + $('#dedicated').checked;
+        if ($('#dedicated').checked) {
+          document.location.href = 'game.html?name=' + $('#name').value + '&player=0&address=' + $('#address').value;
+        }
+        else {
+          document.location.href = 'game.html?name=' + $('#name').value + '&player=0&address=' + lennetServer + ':65' + $('#address').value;
+        }
       }
       function player2() {
-        document.location.href = 'game.html?name=' + $('#name').value + '&player=1&address=' + $('#address').value + '&dedicated=' + $('#dedicated').checked;
+       if ($('#dedicated').checked) {
+          document.location.href = 'game.html?name=' + $('#name').value + '&player=1&address=' + $('#address').value;
+        }
+        else {
+          document.location.href = 'game.html?name=' + $('#name').value + '&player=1&address=' + lennetServer + ':65' + $('#address').value;
+        }
       }
       function player3() {
-        document.location.href = 'game.html?name=' + $('#name').value + '&player=2&address=' + $('#address').value + '&dedicated=' + $('#dedicated').checked;
+        if ($('#dedicated').checked) {
+          document.location.href = 'game.html?name=' + $('#name').value + '&player=2&address=' + $('#address').value;
+        }
+        else {
+          document.location.href = 'game.html?name=' + $('#name').value + '&player=2&address=' + lennetServer + ':65' + $('#address').value;
+        }
       }
       function player4() {
-        document.location.href = 'game.html?name=' + $('#name').value + '&player=3&address=' + $('#address').value + '&dedicated=' + $('#dedicated').checked;
+        if ($('#dedicated').checked) {
+          document.location.href = 'game.html?name=' + $('#name').value + '&player=3&address=' + $('#address').value;
+        }
+        else {
+          document.location.href = 'game.html?name=' + $('#name').value + '&player=3&address=' + lennetServer + ':65' + $('#address').value;
+        }
       }
       $('#dedicated').onclick = function() {
         if ($('#dedicated').checked) {
