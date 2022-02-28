@@ -1,6 +1,5 @@
 // global variables
 var searchParams = new URL(document.location.href).searchParams;
-var dedicated = searchParams.get('dedicated') == 'true';
 var player = parseInt(searchParams.get('player'));
 var address = searchParams.get('address');
 var name = searchParams.get('name');
@@ -60,69 +59,33 @@ loadImage('box0');
 entityFrames['box'] = 1;
 // disconnect function
 function disconnect() {
-  if (dedicated) {
-    request('http://' + address + '/leave?entity=' + name, function(data) {
-      document.location.href = 'index.html';
-    });
-  }
-  else {
-    request('http://34.71.49.178:25568/leave?lennetlobbyid=' + address + '&entity=' + name, function(data) {
-      document.location.href = 'index.html';
-    });
-  }
+  request('http://' + address + '/leave?entity=' + name, function(data) {
+    document.location.href = 'index.html';
+  });
 }
 // join game
-if (dedicated) {
-  request('http://' + address + '/join?entity=' + name + '&player=' + player, function(data) {
-    if (data == 'entity already exists') {
-      alert('There is already a player with name ' + name + '!');
-      document.location.href = 'index.html';
+request('http://' + address + '/join?entity=' + name + '&player=' + player, function(data) {
+  if (data == 'entity already exists') {
+    alert('There is already a player with name ' + name + '!');
+    document.location.href = 'index.html';
+  }
+  else {
+    theme = data;
+    // initial fetch
+    fetchloop();
+    // load theme-specific assets
+    loadImage(theme);
+    loadImage(theme + 'platform');
+    loadImage(theme + 'enemyleft');
+    loadImage(theme + 'enemyright');
+    themesong.src = 'audio/' + theme + '.wav';
+    themesong.loop = true;
+    themesong.play();
+    images[theme].onload = function() {
+      gameloop = setInterval(loop, fpslimit);
     }
-    else {
-      theme = data;
-      // initial fetch
-      fetchloop();
-      // load theme-specific assets
-      loadImage(theme);
-      loadImage(theme + 'platform');
-      loadImage(theme + 'enemyleft');
-      loadImage(theme + 'enemyright');
-      themesong.src = 'audio/' + theme + '.wav';
-      themesong.loop = true;
-      themesong.play();
-      images[theme].onload = function() {
-        gameloop = setInterval(loop, fpslimit);
-      }
-    }
-  });
-}
-else {
-  request('http://34.71.49.178:25568/join?lennetlobbyid=' + address + '&entity=' + name + '&player=' + player, function(data) {
-    if (data == '404 lobby ' + address + ' not found') {
-      alert('Could not find game: ' + data);
-      document.location.href = 'index.html';
-    }
-    else if (data == 'entity already exists') {
-      alert('There is already a player with name ' + name + '!');
-      document.location.href = 'index.html';
-    }
-    else {
-      theme = data;
-      // load theme-specific assets
-      loadImage(theme);
-      loadImage(theme + 'platform');
-      loadImage(theme + 'enemyleft');
-      loadImage(theme + 'enemyright');
-      var themesong = new Audio();
-      themesong.src = 'audio/' + theme + '.wav';
-      themesong.loop = true;
-      themesong.play();
-      images[theme].onload = function() {
-        gameloop = setInterval(loop, fpslimit);
-      }
-    }
-  });
-}
+  }
+});
 // game loop
 function loop() {
   if (entities.hasOwnProperty(name)) {
@@ -177,22 +140,12 @@ function loop() {
 }
 // fetch loop
 function fetchloop() {
-  if (dedicated) {
-    request('http://' + address + '/getentities', function(data) {
-      entities = JSON.parse(data);
-    });
-    request('http://' + address + '/getplatforms', function(data) {
-      platforms = JSON.parse(data);
-    });
-  }
-  else {
-    request('http://34.71.49.178:25568/getentities?lennetlobbyid=' + address, function(data) {
-      entities = JSON.parse(data);
-    });
-    request('http://34.71.49.178:25568/getplatforms?lennetlobbyid=' + address, function(data) {
-      platforms = JSON.parse(data);
-    });
-  }
+  request('http://' + address + '/getentities', function(data) {
+    entities = JSON.parse(data);
+  });
+  request('http://' + address + '/getplatforms', function(data) {
+    platforms = JSON.parse(data);
+  });
 }
 // keydown
 document.onkeydown = function(event) {
