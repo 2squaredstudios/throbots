@@ -162,39 +162,18 @@ document.onkeydown = function(event) {
     });
   }
   if (event.code == 'KeyW') {
-    if (dedicated) {
-      request('http://' + address + '/jump?entity=' + name, function() {});
-    }
-    else {
-      request('http://34.71.49.178:25568/jump?lennetlobbyid=' + address + '&entity=' + name, function() {});
-    }
+    request('http://' + address + '/jump?entity=' + name, function() {});
   }
   if (event.code == 'KeyA') {
     leftDown = true;
-    if (dedicated) {
-      request('http://' + address + '/leftdown?entity=' + name, function() {});
-    }
-    else {
-      request('http://34.71.49.178:25568/leftdown?lennetlobbyid=' + address + '&entity=' + name, function() {});
-    }
+    request('http://' + address + '/leftdown?entity=' + name, function() {});
   }
   if (event.code == 'KeyD') {
     rightDown = true;
-    if (dedicated) {
-      request('http://' + address + '/rightdown?entity=' + name, function() {});
-    }
-    else {
-      request('http://34.71.49.178:25568/rightdown?lennetlobbyid=' + address + '&entity=' + name, function() {});
-    }
+    request('http://' + address + '/rightdown?entity=' + name, function() {});
   }
   if (event.code == 'KeyS') {
-    if (dedicated) {
-      request('http://' + address + '/crouchdown?entity=' + name, function() {});
-    }
-    else {
-      request('http://34.71.49.178:25568/crouchdown?lennetlobbyid=' + address + '&entity=' + name, function() {});
-    }
-  }
+    request('http://' + address + '/crouchdown?entity=' + name, function() {});
   }
 }
 // keyup
@@ -231,12 +210,7 @@ $('#canvas').onclick = function(event) {
   var rect = canvas.getBoundingClientRect();
   var clickX = Math.floor((event.clientX - rect.left) / 100) - 5;
   var clickY = Math.floor((event.clientY - rect.top) / 100) - 5;
-  if (dedicated) {
-    request('http://' + address + '/throw?entity=' + name + '&x=' + clickX + '&y=' + clickY, function() {});
-  }
-  else {
-    request('http://34.71.49.178:25568/throw?lennetlobbyid=' + address + '&entity=' + name + '&x=' + clickX + '&y=' + clickY, function() {});
-  }
+  request('http://' + address + '/throw?entity=' + name + '&x=' + clickX + '&y=' + clickY, function() {});
 }
 // gameloop controller
 setInterval(function() {
