@@ -180,29 +180,14 @@ document.onkeydown = function(event) {
 document.onkeyup = function(event) {
   if (event.code == 'KeyA') {
     leftDown = false;
-    if (dedicated) {
-      request('http://' + address + '/leftup?entity=' + name, function() {});
-    }
-    else {
-      request('http://34.71.49.178:25568/leftup?lennetlobbyid=' + address + '&entity=' + name, function() {});
-    }
+    request('http://' + address + '/leftup?entity=' + name, function() {});
   }
   if (event.code == 'KeyD') {
     rightDown = false;
-    if (dedicated) {
-      request('http://' + address + '/rightup?entity=' + name, function() {});
-    }
-    else {
-      request('http://34.71.49.178:25568/rightup?lennetlobbyid=' + address + '&entity=' + name, function() {});
-    }
+    request('http://' + address + '/rightup?entity=' + name, function() {});
   }
   if (event.code == 'KeyS') {
-    if (dedicated) {
-      request('http://' + address + '/crouchup?entity=' + name, function() {});
-    }
-    else {
-      request('http://34.71.49.178:25568/crouchup?lennetlobbyid=' + address + '&entity=' + name, function() {});
-    }
+    request('http://' + address + '/crouchup?entity=' + name, function() {});
   }
 }
 // throw nearest entity on click
