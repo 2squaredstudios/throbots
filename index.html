@@ -73,7 +73,7 @@
         }
       }
       function newGame() {
-        request('http://34.71.49.178:25568/getlennetlobbyid', function(data) {
+        request('http://' + lennetServer + ':25568/getlennetlobbyid', function(data) {
           alert('Lobby ID to join: ' + data);
         });
       }

@@ -71,8 +71,6 @@ request('http://' + address + '/join?entity=' + name + '&player=' + player, func
   }
   else {
     theme = data;
-    // initial fetch
-    fetchloop();
     // load theme-specific assets
     loadImage(theme);
     loadImage(theme + 'platform');
@@ -82,12 +80,23 @@ request('http://' + address + '/join?entity=' + name + '&player=' + player, func
     themesong.loop = true;
     themesong.play();
     images[theme].onload = function() {
-      gameloop = setInterval(loop, fpslimit);
+      // initial fetch
+      fetchloop(function() {
+        // start fetch loop
+        setInterval(fetchloop, 1000 / 30);
+        // start game loop
+        gameloop = setInterval(loop, fpslimit);
+        // start animation loop
+        setInterval(function() {
+          animationFrame++;
+        }, 125);
+      });
     }
   }
 });
 // game loop
 function loop() {
+  console.log('loop');
   if (entities.hasOwnProperty(name)) {
     // client-side prediction
     if (leftDown) {
@@ -111,12 +120,12 @@ function loop() {
     }
     // draw platforms
     for (var i = 0; i < platforms.length; i++) {
-      ctx.drawImage(images[theme + 'platform'], platforms[i].x - entities[name].x + 114, platforms[i].y);
+      ctx.drawImage(images[theme + 'platform'], Math.round(platforms[i].x - entities[name].x + 114), Math.round(platforms[i].y));
     }
     // draw entities and nametags
     for (var entity in entities) {
-      ctx.drawImage(images[entities[entity].frame + (animationFrame % entityFrames[entities[entity].frame])], (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
-      ctx.fillText(entity, (entities[entity].x - entities[name].x) + 100, entities[entity].y - 34);
+      ctx.drawImage(images[entities[entity].frame + (animationFrame % entityFrames[entities[entity].frame])], Math.round((entities[entity].x - entities[name].x) + 100), Math.round(entities[entity].y - 34));
+      ctx.fillText(entity, Math.round((entities[entity].x - entities[name].x) + 100), Math.round(entities[entity].y - 34));
     }
   }
   // if we died or got kicked
@@ -139,9 +148,11 @@ function loop() {
   }
 }
 // fetch loop
-function fetchloop() {
+function fetchloop(fetched) {
+  console.log('fetch');
   request('http://' + address + '/getentities', function(data) {
     entities = JSON.parse(data);
+    fetched();
   });
   request('http://' + address + '/getplatforms', function(data) {
     platforms = JSON.parse(data);
@@ -175,6 +186,7 @@ document.onkeydown = function(event) {
   if (event.code == 'KeyS') {
     request('http://' + address + '/crouchdown?entity=' + name, function() {});
   }
+  }
 }
 // keyup
 document.onkeyup = function(event) {
@@ -197,7 +209,7 @@ $('#canvas').onclick = function(event) {
   var clickY = Math.floor((event.clientY - rect.top) / 100) - 5;
   request('http://' + address + '/throw?entity=' + name + '&x=' + clickX + '&y=' + clickY, function() {});
 }
-// gameloop controller
+// fps management
 setInterval(function() {
   $('#fps').innerHTML = fpscounter;
   fpscounter = 0;
@@ -214,9 +226,3 @@ $('#fpslimiter').oninput = function() {
   clearInterval(gameloop);
   gameloop = setInterval(loop, fpslimit);
 }
-// fetchloop controller
-setInterval(fetchloop, 1000 / 30);
-// animation loop
-setInterval(function() {
-  animationFrame++;
-}, 125);
