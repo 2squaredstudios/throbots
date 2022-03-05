@@ -105,8 +105,6 @@ function loop() {
     if (rightDown) {
       entities[name].x++;
     }
-    // clear canvas
-    $('#canvas').width = $('#canvas').width;
     // increment fps counter
     fpscounter++;
     // draw background
