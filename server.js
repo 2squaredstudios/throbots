@@ -177,10 +177,15 @@ http.server(process.argv[2],   function(req, res) {
         }
         if (distances.length > 0) {
           var closest = names[distances.indexOf(Math.min(...distances))];
-          entities[closest].yvelocity = parseInt(req.query.y);
-          entities[closest].xvelocity = parseInt(req.query.x);
-          entities[closest].thrown = true;
-          res(200, 'text/plain', 'ok');
+          if (entities[closest].thrown) {
+            res(400, 'text/plain', 'being thrown');
+          }
+          else {
+            entities[closest].yvelocity = parseInt(req.query.y);
+            entities[closest].xvelocity = parseInt(req.query.x);
+            entities[closest].thrown = true;
+            res(200, 'text/plain', 'ok');
+          }
         }
         else {
           res(400, 'text/plain', 'no throwable entities');
