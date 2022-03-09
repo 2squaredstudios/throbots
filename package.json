@@ -13,6 +13,7 @@
     "@thecoder08/http": "thecoder08/http",
     "@thecoder08/lennet": "thecoder08/lennet",
     "is-port-reachable": "^3.1.0",
-    "local-devices": "^3.2.0"
+    "local-devices": "^3.2.0",
+    "node-wiimote": "^0.2.0"
   }
 }
