@@ -29,7 +29,6 @@ setInterval(function() {
     background.src = 'images/' + $('input[name="theme"]:checked').value + '.png';
     platform.src = 'images/' + $('input[name="theme"]:checked').value + 'platform.png';
   }
-  $('#canvas').width = $('#canvas').width;
   ctx.drawImage(background, 0, 0);
   ctx.drawImage(background, 200, 0);
   ctx.drawImage(background, 400, 0);
