@@ -170,7 +170,7 @@ http.server(process.argv[2],   function(req, res) {
         var names = [];
         for (var entity in entities) {
           var distance = Math.hypot(entities[entity].x - entities[req.query.entity].x, entities[entity].y - entities[req.query.entity].y);
-          if ((entity != req.query.entity) && (distance < 100)) {
+          if ((entity != req.query.entity) && distance < 100) {
             names.push(entity);
             distances.push(distance);
           }
@@ -181,6 +181,9 @@ http.server(process.argv[2],   function(req, res) {
             res(400, 'text/plain', 'being thrown');
           }
           else {
+            if (entities[closest].crouchdown) {
+              res(400, 'text/plain', 'crouched');
+            }
             entities[closest].yvelocity = parseInt(req.query.y);
             entities[closest].xvelocity = parseInt(req.query.x);
             entities[closest].thrown = true;
