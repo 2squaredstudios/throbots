@@ -184,10 +184,12 @@ http.server(process.argv[2],   function(req, res) {
             if (entities[closest].crouchdown) {
               res(400, 'text/plain', 'crouched');
             }
-            entities[closest].yvelocity = parseInt(req.query.y);
-            entities[closest].xvelocity = parseInt(req.query.x);
-            entities[closest].thrown = true;
-            res(200, 'text/plain', 'ok');
+            else {
+              entities[closest].yvelocity = parseInt(req.query.y);
+              entities[closest].xvelocity = parseInt(req.query.x);
+              entities[closest].thrown = true;
+              res(200, 'text/plain', 'ok');
+            }
           }
         }
         else {
