@@ -6,6 +6,7 @@
   </head>
   <body>
     <h1>ThroBots</h1>
+    <p><button onclick="fullscreen();">Toggle Fullscreen</button></p>
     <h2>Join Game</h2>
     <p>Name: <input placeholder="John Doe" id="name"></p>
     <h3>Online Game</h3>
@@ -76,6 +77,11 @@
         request('http://' + lennetServer + ':25568/getlennetlobbyid', function(data) {
           alert('Lobby ID to join: ' + data);
         });
+      }
+      var ngui = require('nw.gui');
+      var nwin = ngui.Window.get();
+      function fullscreen() {
+        nwin.toggleFullscreen();
       }
     </script>
     <script src="lan.js"></script>
