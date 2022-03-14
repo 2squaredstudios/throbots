@@ -1,2 +1,0 @@
-# throbots
-A platform game.
