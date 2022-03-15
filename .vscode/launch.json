@@ -12,12 +12,17 @@
             "args": ["25500", "60", "world.json"]
         },
         {
+            "name": "Launch Client",
             "type": "nwjs",
             "request": "launch",
-            "name": "Launch Client",
-            "nwjsVersion": "any",
-            "webRoot": "${workspaceFolder}",
-            "reloadAfterAttached": true
+            "runtimeExecutable": "/home/lennonmclean/.nwjs/nw",
+            "runtimeArgs": [
+                "${workspaceRoot}",
+                "--remote-debugging-port=9222"
+            ],
+            "webRoot": "${workspaceRoot}",
+            "sourceMaps": true,
+            "port": 9222
         }
     ]
 }
