@@ -81,22 +81,20 @@ request('http://' + address + '/join?entity=' + name + '&player=' + player, func
     themesong.play();
     images[theme].onload = function() {
       // initial fetch
-      fetchloop(function() {
-        // start fetch loop
-        setInterval(fetchloop, 1000 / 30);
-        // start game loop
-        gameloop = setInterval(loop, fpslimit);
-        // start animation loop
-        setInterval(function() {
-          animationFrame++;
-        }, 125);
-      });
+      fetchloop();
+      // start fetch loop
+      setInterval(fetchloop, 1000 / 30);
+      // start game loop
+      gameloop = setInterval(loop, fpslimit);
+      // start animation loop
+      setInterval(function() {
+        animationFrame++;
+      }, 125);
     }
   }
 });
 // game loop
 function loop() {
-  console.log('loop');
   if (entities.hasOwnProperty(name)) {
     // client-side prediction
     if (leftDown) {
