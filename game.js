@@ -147,10 +147,8 @@ function loop() {
 }
 // fetch loop
 function fetchloop(fetched) {
-  console.log('fetch');
   request('http://' + address + '/getentities', function(data) {
     entities = JSON.parse(data);
-    fetched();
   });
   request('http://' + address + '/getplatforms', function(data) {
     platforms = JSON.parse(data);
