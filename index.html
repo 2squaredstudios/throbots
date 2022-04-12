@@ -6,7 +6,6 @@
   </head>
   <body>
     <h1>ThroBots</h1>
-    <p><button onclick="fullscreen();">Toggle Fullscreen</button></p>
     <h2>Join Game</h2>
     <p>Name: <input placeholder="John Doe" id="name"></p>
     <h3>Online Game</h3>
@@ -32,7 +31,7 @@
     <script src="node_modules/@thecoder08/http/browser.js"></script>
     <script src="node_modules/@thecoder08/docuget/main.js"></script>
     <script>
-      var lennetServer = '34.71.49.178';
+      var lennetServer = '104.154.110.111';
       function player1() {
         if ($('#dedicated').checked) {
           document.location.href = 'game.html?name=' + $('#name').value + '&player=0&address=' + $('#address').value;
@@ -80,8 +79,10 @@
       }
       var ngui = require('nw.gui');
       var nwin = ngui.Window.get();
-      function fullscreen() {
-        nwin.toggleFullscreen();
+      document.onkeydown = function(event) {
+        if (event.code == 'F11') {
+          nwin.toggleFullscreen();
+        }
       }
     </script>
     <script src="lan.js"></script>

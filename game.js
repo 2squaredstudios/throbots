@@ -11,13 +11,27 @@ var theme = '';
 var themesong = new Audio();
 var images = {};
 var fpscounter = 0;
+var showFps = false;
+var fps = 0;
 var fpslimit = 1000 / 60;
 var platforms = [];
 var entities = {};
 var entityFrames = {};
 var leftDown = false;
 var rightDown = false;
+var ngui = require('nw.gui');
+var nwin = ngui.Window.get();
 var animationFrame = 0;
+$('#canvas').style.width = window.innerWidth.toString() + 'px';
+$('#canvas').style.height = window.innerHeight.toString() + 'px';
+$('#canvas').width = Math.round(window.innerWidth / 5);
+$('#canvas').height = Math.round(window.innerHeight / 5);
+window.onresize = function() {
+  $('#canvas').style.width = window.innerWidth.toString() + 'px';
+  $('#canvas').style.height = window.innerHeight.toString() + 'px';
+  $('#canvas').width = Math.round(window.innerWidth / 5);
+  $('#canvas').height = Math.round(window.innerHeight / 5);
+}
 // function for loading images
 function loadImage(image) {
   images[image] = new Image();
@@ -57,12 +71,6 @@ for (var i = 0; i < 4; i++) {
 }
 loadImage('box0');
 entityFrames['box'] = 1;
-// disconnect function
-function disconnect() {
-  request('http://' + address + '/leave?entity=' + name, function(data) {
-    document.location.href = 'index.html';
-  });
-}
 // join game
 request('http://' + address + '/join?entity=' + name + '&player=' + player, function(data) {
   if (data == 'entity already exists') {
@@ -80,9 +88,9 @@ request('http://' + address + '/join?entity=' + name + '&player=' + player, func
     themesong.loop = true;
     themesong.play();
     images[theme].onload = function() {
-      // initial fetch
-      fetchloop();
-      // start fetch loop
+      // inital fetch
+      fetchloop(function() {
+        // start fetch loop
       setInterval(fetchloop, 1000 / 30);
       // start game loop
       gameloop = setInterval(loop, fpslimit);
@@ -90,6 +98,7 @@ request('http://' + address + '/join?entity=' + name + '&player=' + player, func
       setInterval(function() {
         animationFrame++;
       }, 125);
+      });
     }
   }
 });
@@ -107,6 +116,9 @@ function loop() {
     fpscounter++;
     // draw background
     ctx.drawImage(images[theme], 0, 0);
+    ctx.drawImage(images[theme], 200, 0);
+    ctx.drawImage(images[theme], 0, 200);
+    ctx.drawImage(images[theme], 200, 200);
     // draw speech
     var textLines = speechBox.split('\n');
     var textY = 10;
@@ -116,12 +128,16 @@ function loop() {
     }
     // draw platforms
     for (var i = 0; i < platforms.length; i++) {
-      ctx.drawImage(images[theme + 'platform'], Math.round(platforms[i].x - entities[name].x + 114), Math.round(platforms[i].y));
+      ctx.drawImage(images[theme + 'platform'], Math.round(platforms[i].x - entities[name].x + (window.innerWidth / 10) + 14), Math.round(platforms[i].y));
     }
     // draw entities and nametags
     for (var entity in entities) {
-      ctx.drawImage(images[entities[entity].frame + (animationFrame % entityFrames[entities[entity].frame])], Math.round((entities[entity].x - entities[name].x) + 100), Math.round(entities[entity].y - 34));
-      ctx.fillText(entity, Math.round((entities[entity].x - entities[name].x) + 100), Math.round(entities[entity].y - 34));
+      ctx.drawImage(images[entities[entity].frame + (animationFrame % entityFrames[entities[entity].frame])], Math.round((entities[entity].x - entities[name].x) + (window.innerWidth / 10)), Math.round(entities[entity].y - 34));
+      ctx.fillText(entity, Math.round((entities[entity].x - entities[name].x) + (window.innerWidth / 10)), Math.round(entities[entity].y - 34));
+    }
+    // draw FPS indicator if wanted
+    if (showFps) {
+      ctx.fillText('FPS: ' + fps, 10, 10);
     }
   }
   // if we died or got kicked
@@ -130,12 +146,15 @@ function loop() {
     clearInterval(gameloop);
     // display red background
     ctx.drawImage(images['dead'], 0, 0);
+    ctx.drawImage(images['dead'], 200, 0);
+    ctx.drawImage(images['dead'], 0, 200);
+    ctx.drawImage(images['dead'], 200, 200);
     // stop theme song
     themesong.pause();
     // wait 1 second
     setTimeout(function() {
       // display death message
-      ctx.drawImage(images['deadtext'], 5, 90);
+      ctx.drawImage(images['deadtext'], (window.innerWidth / 10) - 70, window.innerHeight / 10);
       // play death song
       var deathsong = new Audio();
       deathsong.src = 'audio/death.wav';
@@ -147,6 +166,10 @@ function loop() {
 function fetchloop(fetched) {
   request('http://' + address + '/getentities', function(data) {
     entities = JSON.parse(data);
+    try {
+      fetched();
+    }
+    catch(err){}
   });
   request('http://' + address + '/getplatforms', function(data) {
     platforms = JSON.parse(data);
@@ -165,6 +188,25 @@ document.onkeydown = function(event) {
         speechBox += char;
       }
     });
+  }
+  if (event.code == 'Escape') {
+    request('http://' + address + '/leave?entity=' + name, function(data) {
+      document.location.href = 'index.html';
+    });
+    setTimeout(function() {
+      document.location.href = 'index.html';
+    }, 10000);
+  }
+  if (event.code == 'F11') {
+    nwin.toggleFullscreen();
+  }
+  if (event.code == 'F3') {
+    if (showFps) {
+      showFps = false;
+    }
+    else {
+      showFps = true;
+    }
   }
   if (event.code == 'KeyW') {
     request('http://' + address + '/jump?entity=' + name, function() {});
@@ -205,7 +247,7 @@ $('#canvas').onclick = function(event) {
 }
 // fps management
 setInterval(function() {
-  $('#fps').innerHTML = fpscounter;
+  fps = fpscounter;
   fpscounter = 0;
 }, 1000);
 $('#fpslimiter').oninput = function() {

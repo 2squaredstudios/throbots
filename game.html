@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
+    <style>
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+    canvas {
+      display: block;
+    }
+    </style>
     <meta charset="utf-8">
     <title>ThroBots - Game</title>
   </head>
   <body>
-    <p><button onclick="disconnect()">Back</button></p>
-    <p>FPS: <span id="fps"></span></p>
-    <p>Max FPS: <input type="range" id="fpslimiter" min="1" max="301" value="60"> <span id="maxfps">60</span></p>
     <canvas id="canvas" width="200" height="200" style="width: 1000px; height: 1000px; image-rendering: pixelated;"></canvas>
+    <p>Max FPS: <input type="range" id="fpslimiter" min="1" max="301" value="60"> <span id="maxfps">60</span></p>
     <script src="node_modules/@thecoder08/http/browser.js"></script>
     <script src="node_modules/@thecoder08/docuget/main.js"></script>
     <script src="game.js"></script>
