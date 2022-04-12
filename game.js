@@ -241,8 +241,8 @@ document.onkeyup = function(event) {
 // throw nearest entity on click
 $('#canvas').onclick = function(event) {
   var rect = $('#canvas').getBoundingClientRect();
-  var clickX = Math.floor((event.clientX - rect.left) / 100) - 5;
-  var clickY = Math.floor((event.clientY - rect.top) / 100) - 5;
+  var clickX = Math.floor((event.clientX - rect.left) / (window.innerWidth / 10));
+  var clickY = Math.floor((event.clientY - rect.top) / (window.innerWidth / 10));
   request('http://' + address + '/throw?entity=' + name + '&x=' + clickX + '&y=' + clickY, function() {});
 }
 // fps management
