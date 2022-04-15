@@ -238,8 +238,8 @@ document.onkeyup = function(event) {
 // throw nearest entity on click
 $('#canvas').onclick = function(event) {
   var rect = $('#canvas').getBoundingClientRect();
-  var clickX = Math.floor((event.clientX - rect.left) - (window.innerWidth / 2));
-  var clickY = Math.floor((event.clientY - rect.top) - (window.innerheight / 2));
+  var clickX = Math.floor(((event.clientX - rect.left) - (window.innerWidth / 2)) / 20);
+  var clickY = Math.floor(((event.clientY - rect.top) - (window.innerheight / 2)) / 20);
   request('http://' + address + '/throw?entity=' + name + '&x=' + clickX + '&y=' + clickY, function() {});
 }
 // fps management
