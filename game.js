@@ -146,9 +146,6 @@ function loop() {
     clearInterval(gameloop);
     // display red background
     ctx.drawImage(images['dead'], 0, 0);
-    ctx.drawImage(images['dead'], 200, 0);
-    ctx.drawImage(images['dead'], 0, 200);
-    ctx.drawImage(images['dead'], 200, 200);
     // stop theme song
     themesong.pause();
     // wait 1 second
@@ -241,8 +238,8 @@ document.onkeyup = function(event) {
 // throw nearest entity on click
 $('#canvas').onclick = function(event) {
   var rect = $('#canvas').getBoundingClientRect();
-  var clickX = Math.floor((event.clientX - rect.left) / (window.innerWidth / 10));
-  var clickY = Math.floor((event.clientY - rect.top) / (window.innerWidth / 10));
+  var clickX = Math.floor((event.clientX - rect.left) - (window.innerWidth / 2));
+  var clickY = Math.floor((event.clientY - rect.top) - (window.innerheight / 2));
   request('http://' + address + '/throw?entity=' + name + '&x=' + clickX + '&y=' + clickY, function() {});
 }
 // fps management
