@@ -19,6 +19,8 @@ var entities = {};
 var entityFrames = {};
 var leftDown = false;
 var rightDown = false;
+var buttons = [];
+// resize canvas
 var ngui = require('nw.gui');
 var nwin = ngui.Window.get();
 var animationFrame = 0;
@@ -158,6 +160,21 @@ function loop() {
       deathsong.play();
     }, 1000);
   }
+  // probe gamepads
+  var gamepads = navigator.getGamepads();
+  if (gamepads[0]) {
+    for (var i = 0; i < gamepads[0].buttons.length; i++) {
+      if (!(gamepads[0].buttons[i].pressed == buttons[i])) {
+        if (gamepads[0].buttons[i].pressed) {
+          buttonDown(i);
+        }
+        else {
+          buttonUp(i);
+        }
+        buttons[i] = gamepads[0].buttons[i].pressed;
+      }
+    }
+  }
 }
 // fetch loop
 function fetchloop(fetched) {
@@ -172,7 +189,7 @@ function fetchloop(fetched) {
     platforms = JSON.parse(data);
   });
 }
-// keydown
+// keyboard controls
 document.onkeydown = function(event) {
   if (!event.repeat) {
   if (event.code == 'KeyO') {
@@ -221,7 +238,6 @@ document.onkeydown = function(event) {
   }
   }
 }
-// keyup
 document.onkeyup = function(event) {
   if (event.code == 'KeyA') {
     leftDown = false;
@@ -232,6 +248,66 @@ document.onkeyup = function(event) {
     request('http://' + address + '/rightup?entity=' + name, function() {});
   }
   if (event.code == 'KeyS') {
+    request('http://' + address + '/crouchup?entity=' + name, function() {});
+  }
+}
+// controller controls
+function buttonDown(button) {
+  if (button == 11) {
+    speechBox = '';
+    runScript(JSON.parse(fs.readFileSync('script.json')), function(char) {
+      if (char == 'clear') {
+        speechBox = '';
+      }
+      else {
+        speechBox += char;
+      }
+    });
+  }
+  if (button == 9) {
+    request('http://' + address + '/leave?entity=' + name, function(data) {
+      document.location.href = 'index.html';
+    });
+    setTimeout(function() {
+      document.location.href = 'index.html';
+    }, 10000);
+  }
+  if (button == 5) {
+    nwin.toggleFullscreen();
+  }
+  if (button == 4) {
+    if (showFps) {
+      showFps = false;
+    }
+    else {
+      showFps = true;
+    }
+  }
+  if (button == 0) {
+    request('http://' + address + '/jump?entity=' + name, function() {});
+  }
+  if (button == 14) {
+    leftDown = true;
+    request('http://' + address + '/leftdown?entity=' + name, function() {});
+  }
+  if (button == 15) {
+    rightDown = true;
+    request('http://' + address + '/rightdown?entity=' + name, function() {});
+  }
+  if (button == 1) {
+    request('http://' + address + '/crouchdown?entity=' + name, function() {});
+  }
+}
+function buttonUp(button) {
+  if (button == 14) {
+    leftDown = false;
+    request('http://' + address + '/leftup?entity=' + name, function() {});
+  }
+  if (button == 15) {
+    rightDown = false;
+    request('http://' + address + '/rightup?entity=' + name, function() {});
+  }
+  if (button == 1) {
     request('http://' + address + '/crouchup?entity=' + name, function() {});
   }
 }

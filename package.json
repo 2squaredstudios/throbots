@@ -2,7 +2,7 @@
   "name": "throbots",
   "version": "1.0.3",
   "description": "A platform game.",
-  "main": "logo.html",
+  "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
