@@ -5,6 +5,7 @@ var address = searchParams.get('address');
 var name = searchParams.get('name');
 var ctx = $('#canvas').getContext('2d');
 var fs = require('fs');
+var dead = false;
 var runScript = require('./speech.js');
 var speechBox = '';
 var theme = '';
@@ -158,9 +159,12 @@ function loop() {
       var deathsong = new Audio();
       deathsong.src = 'audio/death.wav';
       deathsong.play();
+      dead = true;
     }, 1000);
   }
-  // probe gamepads
+}
+// probe gamepads
+setInterval(function() {
   var gamepads = navigator.getGamepads();
   if (gamepads[0]) {
     for (var i = 0; i < gamepads[0].buttons.length; i++) {
@@ -175,7 +179,7 @@ function loop() {
       }
     }
   }
-}
+}, 100);
 // fetch loop
 function fetchloop(fetched) {
   request('http://' + address + '/getentities', function(data) {
@@ -210,6 +214,11 @@ document.onkeydown = function(event) {
     setTimeout(function() {
       document.location.href = 'index.html';
     }, 10000);
+  }
+  if (event.code == 'Enter') {
+    if (dead) {
+      location.reload();
+    }
   }
   if (event.code == 'F11') {
     nwin.toggleFullscreen();
@@ -284,7 +293,12 @@ function buttonDown(button) {
     }
   }
   if (button == 0) {
-    request('http://' + address + '/jump?entity=' + name, function() {});
+    if (dead) {
+      location.reload();
+    }
+    else {
+      request('http://' + address + '/jump?entity=' + name, function() {});
+    }
   }
   if (button == 14) {
     leftDown = true;

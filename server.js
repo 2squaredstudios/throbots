@@ -73,7 +73,7 @@ http.server(process.argv[2],   function(req, res) {
       res(400, 'text/plain', 'entity already exists');
     }
     else {
-      entities[req.query.entity] = {x: 5, y: 5, yvelocity: 0, xvelocity: 0, crouchdown: false, leftdown: false, rightdown: false, frame: 'player' + req.query.player + '/still', thrown: false};
+      entities[req.query.entity] = {x: 10, y: 10, yvelocity: 0, xvelocity: 0, crouchdown: false, leftdown: false, rightdown: false, frame: 'player' + req.query.player + '/still', thrown: false};
       console.log(req.query.entity + ' joined the game!');
       res(200, 'text/plain', world.theme);
     }
