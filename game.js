@@ -328,8 +328,8 @@ function buttonUp(button) {
 // throw nearest entity on click
 $('#canvas').onclick = function(event) {
   var rect = $('#canvas').getBoundingClientRect();
-  var clickX = Math.floor(((event.clientX - rect.left) - (window.innerWidth / 2)) / 20);
-  var clickY = Math.floor(((event.clientY - rect.top) - (window.innerheight / 2)) / 20);
+  var clickX = Math.floor(((event.clientX - rect.left) - (window.innerWidth / 2)) / 50);
+  var clickY = Math.floor(((event.clientY - rect.top) - (window.innerHeight / 2)) / 50);
   request('http://' + address + '/throw?entity=' + name + '&x=' + clickX + '&y=' + clickY, function() {});
 }
 // fps management
