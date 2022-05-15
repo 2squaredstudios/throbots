@@ -73,7 +73,9 @@ for (var i = 0; i < 4; i++) {
   }
 }
 loadImage('box0');
-entityFrames['box'] = 1;
+loadImage('box1');
+loadImage('box2');
+entityFrames['box'] = 3;
 // join game
 request('http://' + address + '/join?entity=' + name + '&player=' + player, function(data) {
   if (data == 'entity already exists') {

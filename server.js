@@ -73,7 +73,7 @@ http.server(process.argv[2],   function(req, res) {
       res(400, 'text/plain', 'entity already exists');
     }
     else {
-      entities[req.query.entity] = {x: 10, y: 10, yvelocity: 0, xvelocity: 0, crouchdown: false, leftdown: false, rightdown: false, frame: 'player' + req.query.player + '/still', thrown: false};
+      entities[req.query.entity] = {x: 20, y: 10, yvelocity: 0, xvelocity: 0, crouchdown: false, leftdown: false, rightdown: false, frame: 'player' + req.query.player + '/still', thrown: false};
       console.log(req.query.entity + ' joined the game!');
       res(200, 'text/plain', world.theme);
     }
@@ -141,7 +141,7 @@ http.server(process.argv[2],   function(req, res) {
   // jump
   else if (req.pathname == '/jump') {
     if (entities.hasOwnProperty(req.query.entity)) {
-      if (Math.floor(entities[req.query.entity].yvelocity) == 0) {
+      if (entities[req.query.entity].yvelocity == 0) {
         if (entities[req.query.entity].crouchdown) {
           res(400, 'text/plain', 'could not jump, crouched');
         }
