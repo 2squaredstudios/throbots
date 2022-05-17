@@ -1,5 +1,6 @@
 var find = require('local-devices');
 var isPortReachable = require('is-port-reachable');
+var cp = require('child_process');
 
 async function refresh() {
   $('#games').innerHTML = '';
