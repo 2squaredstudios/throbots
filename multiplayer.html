@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>ThroBots - Multiplayer</title>
+  </head>
+  <body>
+    <p><a href="index.html">Back</a></p>
+    <h1>Multiplayer</h1>
+    <h2>Join Game</h2>
+    <p>Name: <input placeholder="John Doe" id="name"></p>
+    <h3>Online Game</h3>
+    <p>Connect to dedicated server (not recommended, unless you know what you're doing): <input type="checkbox" id="dedicated"></p>
+    <p><input id="address" placeholder="Lobby ID"><button onclick="player1();">Red</button><button onclick="player2();">Yellow</button><button onclick="player3();">Green</button><button onclick="player4();">Blue</button></p>
+    <h3>LAN Game</h3>
+    <p><span id="status">Scanning for LAN games...</span><button onclick="refresh();">Refresh</button></p>
+    <p id="games"></p>
+    <hr>
+    <h2>Create Game</h2>
+    <h3>Online Game</h3>
+    <p><button onclick="newGame();">Get Lobby ID</button></p>
+    <h3>LAN Game</h3>
+    <p>World File: <input id="world" placeholder="world.json"> Start game as: <button onclick="startServer($('#world').value, '25500');setInterval(function() {joinGame1('localhost:25500')}, 5000);">Red</button><button onclick="startServer($('#world').value, '25500');setInterval(function() {joinGame2('localhost:25500')}, 5000);">Yellow</button><button onclick="startServer($('#world').value, '25500');setInterval(function() {joinGame3('localhost:25500')}, 5000);">Green</button><button onclick="startServer($('#world').value, '25500');setInterval(function() {joinGame4('localhost:25500')}, 5000);">Blue</button></p>
+    <script src="serverwrapper.js"></script>
+    <script src="node_modules/@thecoder08/http/browser.js"></script>
+    <script src="node_modules/@thecoder08/docuget/main.js"></script>
+    <script src="multiplayer.js"></script>
+  </body>
+</html>

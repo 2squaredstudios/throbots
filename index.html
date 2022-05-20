@@ -1,75 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>ThroBots - Multiplayer</title>
-  </head>
-  <body>
-    <p><a href="mainmenu.html">Back</a></p>
-    <h1>Multiplayer</h1>
-    <h2>Join Game</h2>
-    <p>Name: <input placeholder="John Doe" id="name"></p>
-    <h3>Online Game</h3>
-    <p>Connect to dedicated server (not recommended, unless you know what you're doing): <input type="checkbox" id="dedicated"></p>
-    <p><input id="address" placeholder="Lobby ID"><button onclick="player1();">Red</button><button onclick="player2();">Yellow</button><button onclick="player3();">Green</button><button onclick="player4();">Blue</button></p>
-    <h3>LAN Game</h3>
-    <p><span id="status">Scanning for LAN games...</span><button onclick="refresh();">Refresh</button></p>
-    <p id="games"></p>
-    <hr>
-    <h2>Create Game</h2>
-    <h3>Online Game</h3>
-    <p><button onclick="newGame();">Get Lobby ID</button></p>
-    <h3>LAN Game</h3>
-    <p>World File: <input id="world" placeholder="world.json"> Start game as: <button onclick="require('./serverwrapper.js').startServer($('#world').value, '25500');setInterval(function() {joinGame1('localhost:25500')}, 5000);">Red</button><button onclick="require('./serverwrapper.js').startServer($('#world').value, '25500');setInterval(function() {joinGame2('localhost:25500')}, 5000);">Yellow</button><button onclick="require('./serverwrapper.js').startServer($('#world').value, '25500');setInterval(function() {joinGame3('localhost:25500')}, 5000);">Green</button><button onclick="require('./serverwrapper.js').startServer($('#world').value, '25500');setInterval(function() {joinGame4('localhost:25500')}, 5000);">Blue</button></p>
-    <script src="node_modules/@thecoder08/http/browser.js"></script>
-    <script src="node_modules/@thecoder08/docuget/main.js"></script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThroBots - Start</title>
+</head>
+<body>
+    <h1>Throbots</h1>
+    <h2><a href="singleplayer.html">Single Player</a></h2>
+    <h2><a href="multiplayer.html">Multiplayer</a></h2>
+    <p><a href="levelbuilder.html">Level Builder</a></p>
+    <p><a href="credits.html">Credits</a></p>
+    <audio loop autoplay src="audio/throbots.wav"></audio>
     <script>
-      var lennetServer = 'throbots.ddns.net';
-      function player1() {
-        if ($('#dedicated').checked) {
-          document.location.href = 'game.html?name=' + $('#name').value + '&player=0&address=' + $('#address').value;
-        }
-        else {
-          document.location.href = 'game.html?name=' + $('#name').value + '&player=0&address=' + lennetServer + ':65' + $('#address').value;
-        }
-      }
-      function player2() {
-       if ($('#dedicated').checked) {
-          document.location.href = 'game.html?name=' + $('#name').value + '&player=1&address=' + $('#address').value;
-        }
-        else {
-          document.location.href = 'game.html?name=' + $('#name').value + '&player=1&address=' + lennetServer + ':65' + $('#address').value;
-        }
-      }
-      function player3() {
-        if ($('#dedicated').checked) {
-          document.location.href = 'game.html?name=' + $('#name').value + '&player=2&address=' + $('#address').value;
-        }
-        else {
-          document.location.href = 'game.html?name=' + $('#name').value + '&player=2&address=' + lennetServer + ':65' + $('#address').value;
-        }
-      }
-      function player4() {
-        if ($('#dedicated').checked) {
-          document.location.href = 'game.html?name=' + $('#name').value + '&player=3&address=' + $('#address').value;
-        }
-        else {
-          document.location.href = 'game.html?name=' + $('#name').value + '&player=3&address=' + lennetServer + ':65' + $('#address').value;
-        }
-      }
-      $('#dedicated').onclick = function() {
-        if ($('#dedicated').checked) {
-          $('#address').placeholder = 'Address';
-        }
-        else {
-          $('#address').placeholder = 'Lobby ID';
-        }
-      }
-      function newGame() {
-        request('http://' + lennetServer + ':25568/getlennetlobbyid', function(data) {
-          alert('Lobby ID to join: ' + data);
-        });
-      }
       var ngui = require('nw.gui');
       var nwin = ngui.Window.get();
       document.onkeydown = function(event) {
@@ -78,6 +22,5 @@
         }
       }
     </script>
-    <script src="lan.js"></script>
-  </body>
+</body>
 </html>

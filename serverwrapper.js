@@ -1,5 +1,4 @@
-var cp = require('child_process');
-
-exports.startServer = function(world, port) {
-    cp.exec('node server.js ' + port + ' 60 ' + world);
+function startServer(world, port) {
+    process.argv = ['node', 'server.js', port, '60', world];
+    require('server.js');
 }
