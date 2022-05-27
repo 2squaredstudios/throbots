@@ -21,20 +21,23 @@ var entityFrames = {};
 var leftDown = false;
 var rightDown = false;
 var buttons = [];
+var animationFrame = 0;
 // resize canvas
 var ngui = require('nw.gui');
 var nwin = ngui.Window.get();
-var animationFrame = 0;
-$('#canvas').style.width = window.innerWidth.toString() + 'px';
-$('#canvas').style.height = window.innerHeight.toString() + 'px';
-$('#canvas').width = Math.round(window.innerWidth / 5);
-$('#canvas').height = Math.round(window.innerHeight / 5);
-window.onresize = function() {
-  $('#canvas').style.width = window.innerWidth.toString() + 'px';
-  $('#canvas').style.height = window.innerHeight.toString() + 'px';
-  $('#canvas').width = Math.round(window.innerWidth / 5);
-  $('#canvas').height = Math.round(window.innerHeight / 5);
+function resize() {
+  var aspectratio = window.innerWidth / window.innerHeight;
+  if (aspectratio > 1.77) {
+    $('#canvas').style.width = Math.round((window.innerHeight / 9) * 16).toString() + 'px';
+    $('#canvas').style.height = window.innerHeight.toString() + 'px';
+  }
+  else {
+    $('#canvas').style.height = Math.round((window.innerWidth / 16) * 9).toString() + 'px';
+    $('#canvas').style.width = window.innerWidth.toString() + 'px';
+  }
 }
+resize();
+window.onresize = resize;
 // function for loading images
 function loadImage(image) {
   images[image] = new Image();
@@ -133,12 +136,12 @@ function loop() {
     }
     // draw platforms
     for (var i = 0; i < platforms.length; i++) {
-      ctx.drawImage(images[theme + 'platform'], Math.round(platforms[i].x - entities[name].x + (window.innerWidth / 10) + 14), Math.round(platforms[i].y));
+      ctx.drawImage(images[theme + 'platform'], Math.round(platforms[i].x - entities[name].x + 206), Math.round(platforms[i].y));
     }
     // draw entities and nametags
     for (var entity in entities) {
-      ctx.drawImage(images[entities[entity].frame + (animationFrame % entityFrames[entities[entity].frame])], Math.round((entities[entity].x - entities[name].x) + (window.innerWidth / 10)), Math.round(entities[entity].y - 34));
-      ctx.fillText(entity, Math.round((entities[entity].x - entities[name].x) + (window.innerWidth / 10)), Math.round(entities[entity].y - 34));
+      ctx.drawImage(images[entities[entity].frame + (animationFrame % entityFrames[entities[entity].frame])], Math.round((entities[entity].x - entities[name].x) + 192), Math.round(entities[entity].y - 34));
+      ctx.fillText(entity, Math.round((entities[entity].x - entities[name].x) + 192), Math.round(entities[entity].y - 34));
     }
     // draw FPS indicator if wanted
     if (showFps) {
@@ -156,7 +159,7 @@ function loop() {
     // wait 1 second
     setTimeout(function() {
       // display death message
-      ctx.drawImage(images['deadtext'], (window.innerWidth / 10) - 70, window.innerHeight / 10);
+      ctx.drawImage(images['deadtext'], 122, 540);
       // play death song
       var deathsong = new Audio();
       deathsong.src = 'audio/death.wav';
@@ -330,8 +333,8 @@ function buttonUp(button) {
 // throw nearest entity on click
 $('#canvas').onclick = function(event) {
   var rect = $('#canvas').getBoundingClientRect();
-  var clickX = Math.floor(((event.clientX - rect.left) - (window.innerWidth / 2)) / 50);
-  var clickY = Math.floor(((event.clientY - rect.top) - (window.innerHeight / 2)) / 50);
+  var clickX = Math.floor(((event.clientX - rect.left) - 960) / 50);
+  var clickY = Math.floor(((event.clientY - rect.top) - 540) / 50);
   request('http://' + address + '/throw?entity=' + name + '&x=' + clickX + '&y=' + clickY, function() {});
 }
 // fps management
