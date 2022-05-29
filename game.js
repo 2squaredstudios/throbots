@@ -159,7 +159,7 @@ function loop() {
     // wait 1 second
     setTimeout(function() {
       // display death message
-      ctx.drawImage(images['deadtext'], 122, 540);
+      ctx.drawImage(images['deadtext'], 122, 108);
       // play death song
       var deathsong = new Audio();
       deathsong.src = 'audio/death.wav';
@@ -333,8 +333,8 @@ function buttonUp(button) {
 // throw nearest entity on click
 $('#canvas').onclick = function(event) {
   var rect = $('#canvas').getBoundingClientRect();
-  var clickX = Math.floor(((event.clientX - rect.left) - 960) / 50);
-  var clickY = Math.floor(((event.clientY - rect.top) - 540) / 50);
+  var clickX = Math.floor(((((event.clientX - rect.left) / parseInt($('#canvas').style.width)) * 384) - 192) / 5);
+  var clickY = Math.floor(((((event.clientY - rect.top) / parseInt($('#canvas').style.height)) * 216) - 108) / 5);
   request('http://' + address + '/throw?entity=' + name + '&x=' + clickX + '&y=' + clickY, function() {});
 }
 // fps management
