@@ -16,6 +16,7 @@
     <script>
       var ngui = require('nw.gui');
       var nwin = ngui.Window.get();
+      nwin.enterFullscreen();
       document.onkeydown = function(event) {
         if (event.code == 'F11') {
           nwin.toggleFullscreen();
