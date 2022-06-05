@@ -11,13 +11,6 @@ var mousepos = {x: 0, y: 0};
 entity.src = 'images/entitytemplate.png';
 background.src = 'images/' + $('input[name="theme"]:checked').value + '.png';
 platform.src = 'images/' + $('input[name="theme"]:checked').value + 'platform.png';
-background.onload = function() {
-  ctx.drawImage(background, 0, 0);
-  ctx.drawImage(background, 200, 0);
-  ctx.drawImage(background, 400, 0);
-  ctx.drawImage(background, 600, 0);
-  ctx.drawImage(background, 800, 0);
-}
 function selectplatform() {
   selection = 'platform';
 }
@@ -30,10 +23,7 @@ setInterval(function() {
     platform.src = 'images/' + $('input[name="theme"]:checked').value + 'platform.png';
   }
   ctx.drawImage(background, 0, 0);
-  ctx.drawImage(background, 200, 0);
-  ctx.drawImage(background, 400, 0);
-  ctx.drawImage(background, 600, 0);
-  ctx.drawImage(background, 800, 0);
+  ctx.drawImage(background, 384, 0);
   for (var i = 0; i < platforms.length; i++) {
     ctx.drawImage(platform, platforms[i].x, platforms[i].y);
   }
