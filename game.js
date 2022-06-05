@@ -124,9 +124,6 @@ function loop() {
     fpscounter++;
     // draw background
     ctx.drawImage(images[theme], 0, 0);
-    ctx.drawImage(images[theme], 200, 0);
-    ctx.drawImage(images[theme], 0, 200);
-    ctx.drawImage(images[theme], 200, 200);
     // draw speech
     var textLines = speechBox.split('\n');
     var textY = 10;
