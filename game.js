@@ -14,7 +14,6 @@ var images = {};
 var fpscounter = 0;
 var showFps = false;
 var fps = 0;
-var fpslimit = 1000 / 60;
 var platforms = [];
 var entities = {};
 var entityFrames = {};
@@ -98,10 +97,10 @@ request('http://' + address + '/join?entity=' + name + '&player=' + player, func
     images[theme].onload = function() {
       // inital fetch
       fetchloop(function() {
-        // start fetch loop
+      // start fetch loop
       setInterval(fetchloop, 1000 / 30);
       // start game loop
-      gameloop = setInterval(loop, fpslimit);
+      requestAnimationFrame(loop);
       // start animation loop
       setInterval(function() {
         animationFrame++;
@@ -144,11 +143,11 @@ function loop() {
     if (showFps) {
       ctx.fillText('FPS: ' + fps, 10, 10);
     }
+    // draw next frame
+    requestAnimationFrame(loop)
   }
   // if we died or got kicked
   else {
-    // stop the game from running
-    clearInterval(gameloop);
     // display red background
     ctx.drawImage(images['dead'], 0, 0);
     // stop theme song
@@ -339,15 +338,3 @@ setInterval(function() {
   fps = fpscounter;
   fpscounter = 0;
 }, 1000);
-$('#fpslimiter').oninput = function() {
-  if ($('#fpslimiter').value == 301) {
-    $('#maxfps').innerHTML = 'Unlimited';
-    fpslimit = 0;
-  }
-  else {
-    $('#maxfps').innerHTML = $('#fpslimiter').value;
-    fpslimit = 1000 / parseInt($('#fpslimiter').value);
-  }
-  clearInterval(gameloop);
-  gameloop = setInterval(loop, fpslimit);
-}
