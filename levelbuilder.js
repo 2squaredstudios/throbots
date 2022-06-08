@@ -17,7 +17,8 @@ function selectplatform() {
 function selectentity() {
   selection = 'entity';
 }
-setInterval(function() {
+requestAnimationFrame(loop);
+function loop() {
   if (!background.src.includes($('input[name="theme"]:checked').value)) {
     background.src = 'images/' + $('input[name="theme"]:checked').value + '.png';
     platform.src = 'images/' + $('input[name="theme"]:checked').value + 'platform.png';
@@ -36,7 +37,8 @@ setInterval(function() {
   else {
     ctx.drawImage(entity, mousepos.x, mousepos.y);
   }
-});
+  requestAnimationFrame(loop);
+};
 document.onmousemove = function(event) {
   mousepos = {x: (event.clientX - rect.left) / 2, y: (event.clientY - rect.top) / 2};
 }
