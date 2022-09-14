@@ -18,6 +18,7 @@
   },
   "window": {
     "width": 868,
-    "height": 480
+    "height": 480,
+    "fullscreen": true
   }
 }
