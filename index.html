@@ -25,12 +25,9 @@
     <p><a href="credits.html"><img class="button" src="images/creditsbutton.png" alt="Credits"></a></p>
     <audio loop autoplay src="audio/throbots.wav"></audio>
     <script>
-      var ngui = require('nw.gui');
-      var nwin = ngui.Window.get();
-      nwin.enterFullscreen();
       document.onkeydown = function(event) {
         if (event.code == 'F11') {
-          nwin.toggleFullscreen();
+          nw.Window.get().toggleFullscreen();
         }
       }
     </script>
