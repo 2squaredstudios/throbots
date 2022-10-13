@@ -166,17 +166,8 @@ http.server(process.argv[2],   function(req, res) {
         res(400, 'text/plain', 'could not throw, crouched');
       }
       else {
-        var distances = [];
-        var names = [];
-        for (var entity in entities) {
-          var distance = Math.hypot(entities[entity].x - entities[req.query.entity].x, entities[entity].y - entities[req.query.entity].y);
-          if ((entity != req.query.entity) && distance < 100) {
-            names.push(entity);
-            distances.push(distance);
-          }
-        }
-        if (distances.length > 0) {
-          var closest = names[distances.indexOf(Math.min(...distances))];
+        var closest = findClosest();
+        if (closest) {
           if (entities[closest].thrown) {
             res(400, 'text/plain', 'being thrown');
           }
@@ -221,6 +212,21 @@ http.server(process.argv[2],   function(req, res) {
     else {
       res(404, 'text/plain', 'entity not found');
     }
+  }
+  // pick up and drop
+  else if (req.pathname == '/pickup') {
+    if (entities.hasOwnProperty(req.query.entities)) {
+      if (entities[req.query.entity].crouchdown) {
+        res(400, 'text/plain', 'could not pick up, crouched');
+      }
+      else {
+        var closest = findClosest();
+        
+      }
+    }
+  }
+  else if (req.pathname == '/drop') {
+    
   }
   // if we receive an unknown request, return 404 not found
   else {
@@ -315,5 +321,23 @@ function setFrame(entity, frame) {
   }
   if (entities[entity].frame.includes('player3/')) {
     entities[entity].frame = 'player3/' + frame;
+  }
+}
+// find closest entity
+function findClosest() {
+  var distances = [];
+  var names = [];
+  for (var entity in entities) {
+    var distance = Math.hypot(entities[entity].x - entities[req.query.entity].x, entities[entity].y - entities[req.query.entity].y);
+    if ((entity != req.query.entity) && distance < 100) {
+      names.push(entity);
+      distances.push(distance);
+    }
+  }
+  if (distances.length > 0) {
+    return names[distances.indexOf(Math.min(...distances))];
+  }
+  else {
+    return "";
   }
 }

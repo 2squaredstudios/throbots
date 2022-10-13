@@ -4,3 +4,7 @@ function singlePlayer(theme, level) {
         document.location.href = 'game.html?name=Botrick&player=0&address=localhost:48667';
     }, 1000);
 }
+function startServer(world, port) {
+    process.argv = ['node', 'server.js', port, '60', world];
+    require('server.js');
+}
