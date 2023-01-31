@@ -235,7 +235,7 @@ document.onkeydown = function(event) {
   if ((event.code == 'KeyW') || (event.code == 'Space') || (event.code == 'ArrowUp')) {
     request('http://' + address + '/jump?entity=' + name, function() {});
   }
-  if (event.code == 'KeyE' || (event.code == 'ArrowUp')) {
+  if (event.code == 'KeyE') {
     request('http://' + address + '/pickup?entity=' + name, function() {});
   }
   if ((event.code == 'KeyA') || (event.code == 'ArrowLeft')) {
@@ -303,6 +303,9 @@ function buttonDown(button) {
     else {
       request('http://' + address + '/jump?entity=' + name, function() {});
     }
+  }
+  if (button == 2) {
+    request('http://' + address + '/pickup?entity=' + name, function() {});
   }
   if (button == 14) {
     leftDown = true;
