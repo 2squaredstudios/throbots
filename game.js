@@ -232,32 +232,35 @@ document.onkeydown = function(event) {
       showFps = true;
     }
   }
-  if (event.code == 'KeyW') {
+  if ((event.code == 'KeyW') || (event.code == 'Space') || (event.code == 'ArrowUp')) {
     request('http://' + address + '/jump?entity=' + name, function() {});
   }
-  if (event.code == 'KeyA') {
+  if (event.code == 'KeyE' || (event.code == 'ArrowUp')) {
+    request('http://' + address + '/pickup?entity=' + name, function() {});
+  }
+  if ((event.code == 'KeyA') || (event.code == 'ArrowLeft')) {
     leftDown = true;
     request('http://' + address + '/leftdown?entity=' + name, function() {});
   }
-  if (event.code == 'KeyD') {
+  if ((event.code == 'KeyD') || (event.code == 'ArrowRight')) {
     rightDown = true;
     request('http://' + address + '/rightdown?entity=' + name, function() {});
   }
-  if (event.code == 'KeyS') {
+  if ((event.code == 'KeyS') || (event.code == 'ArrowDown')) {
     request('http://' + address + '/crouchdown?entity=' + name, function() {});
   }
   }
 }
 document.onkeyup = function(event) {
-  if (event.code == 'KeyA') {
+  if ((event.code == 'KeyA') || (event.code == 'ArrowLeft')) {
     leftDown = false;
     request('http://' + address + '/leftup?entity=' + name, function() {});
   }
-  if (event.code == 'KeyD') {
+  if ((event.code == 'KeyD') || (event.code == 'ArrowRight')) {
     rightDown = false;
     request('http://' + address + '/rightup?entity=' + name, function() {});
   }
-  if (event.code == 'KeyS') {
+  if ((event.code == 'KeyS') || (event.code == 'ArrowDown')) {
     request('http://' + address + '/crouchup?entity=' + name, function() {});
   }
 }

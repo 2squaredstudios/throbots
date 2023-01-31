@@ -49,7 +49,7 @@ $('#canvas').onclick = function(event) {
     platforms.push({x: clickX, y: clickY});
   }
   else {
-    entities[prompt('Enter entity name')] = {x: clickX, y: clickY, yvelocity: 0, xvelocity: 0, crouchdown: false, leftdown: false, rightdown: false, frame: prompt('Enter frame'), thrown: false};
+    entities[prompt('Enter entity name')] = {x: clickX, y: clickY, yvelocity: 0, xvelocity: 0, crouchdown: false, leftdown: false, rightdown: false, frame: prompt('Enter frame'), thrown: false, pickedup: false};
   }
 }
 function save() {
