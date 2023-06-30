@@ -4,21 +4,18 @@
     <style>
         body {
             background-color: black;
+            margin: 0px;
+            overflow: hidden;
         }
     </style>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2 Squared Studios</title>
 </head>
 <body>
-    <video id="test" controls src="logo.mp4"></video>
+    <video autoplay src="logo.mkv"></video>
     <script>
-        var video = document.querySelector('#test');
-        video.onload = function() {
-            video.play();
-        }
-        video.onended = function() {
+        document.querySelector('video').onended = function() {
             document.location.href = 'index.html';
         }
     </script>
