@@ -15,40 +15,40 @@ jobs:
         run: mkdir build
 
       - name: Download Windows x64 NW.js
-        run: wget https://dl.nwjs.io/v0.55.0/nwjs-v0.55.0-win-x64.zip
+        run: wget https://dl.nwjs.io/v0.77.0/nwjs-v0.77.0-win-x64.zip
 
       - name: Download Windows ia32 NW.js
-        run: wget https://dl.nwjs.io/v0.55.0/nwjs-v0.55.0-win-ia32.zip
+        run: wget https://dl.nwjs.io/v0.77.0/nwjs-v0.77.0-win-ia32.zip
 
       - name: Download Linux x64 NW.js
-        run: wget https://dl.nwjs.io/v0.55.0/nwjs-v0.55.0-linux-x64.tar.gz
+        run: wget https://dl.nwjs.io/v0.77.0/nwjs-v0.77.0-linux-x64.tar.gz
 
       - name: Download Linux ia32 NW.js
-        run: wget https://dl.nwjs.io/v0.55.0/nwjs-v0.55.0-linux-ia32.tar.gz
+        run: wget https://dl.nwjs.io/v0.77.0/nwjs-v0.77.0-linux-ia32.tar.gz
 
       - name: Download MacOS NW.js
-        run: wget https://dl.nwjs.io/v0.55.0/nwjs-v0.55.0-osx-x64.zip
+        run: wget https://dl.nwjs.io/v0.77.0/nwjs-v0.77.0-osx-x64.zip
 
       - name: Extract Windows x64 NW.js
-        run: unzip nwjs-v0.55.0-win-x64.zip
+        run: unzip nwjs-v0.77.0-win-x64.zip
 
       - name: Extract Windows ia32 NW.js
-        run: unzip nwjs-v0.55.0-win-ia32.zip
+        run: unzip nwjs-v0.77.0-win-ia32.zip
 
       - name: Extract Linux x64 NW.js
-        run: tar -xvf nwjs-v0.55.0-linux-x64.tar.gz
+        run: tar -xvf nwjs-v0.77.0-linux-x64.tar.gz
 
       - name: Extract Linux ia32 NW.js
-        run: tar -xvf nwjs-v0.55.0-linux-ia32.tar.gz
+        run: tar -xvf nwjs-v0.77.0-linux-ia32.tar.gz
 
       - name: Extract MacOS NW.js
-        run: unzip nwjs-v0.55.0-osx-x64.zip
+        run: unzip nwjs-v0.77.0-osx-x64.zip
 
       - name: Delete archives
-        run: rm nwjs-v0.55.0-linux-x64.tar.gz nwjs-v0.55.0-win-x64.zip nwjs-v0.55.0-linux-ia32.tar.gz nwjs-v0.55.0-win-ia32.zip nwjs-v0.55.0-osx-x64.zip
+        run: rm nwjs-v0.77.0-linux-x64.tar.gz nwjs-v0.77.0-win-x64.zip nwjs-v0.77.0-linux-ia32.tar.gz nwjs-v0.77.0-win-ia32.zip nwjs-v0.77.0-osx-x64.zip
 
       - name: Rename and move NW.js directories
-        run: mv nwjs-v0.55.0-linux-x64 build/throbots-linux-x64 && mv nwjs-v0.55.0-win-x64 build/throbots-win-x64 && mv nwjs-v0.55.0-linux-ia32 build/throbots-linux-ia32 && mv nwjs-v0.55.0-win-ia32 build/throbots-win-ia32 && mv nwjs-v0.55.0-osx-x64/nwjs.app build/ThroBots.app && rm -r nwjs-v0.55.0-osx-x64
+        run: mv nwjs-v0.77.0-linux-x64 build/throbots-linux-x64 && mv nwjs-v0.77.0-win-x64 build/throbots-win-x64 && mv nwjs-v0.77.0-linux-ia32 build/throbots-linux-ia32 && mv nwjs-v0.77.0-win-ia32 build/throbots-win-ia32 && mv nwjs-v0.77.0-osx-x64/nwjs.app build/ThroBots.app && rm -r nwjs-v0.77.0-osx-x64
 
       - name: Create package.nw directories
         run: mkdir build/throbots-linux-x64/package.nw && mkdir build/throbots-win-x64/package.nw && mkdir build/throbots-linux-ia32/package.nw && mkdir build/throbots-win-ia32/package.nw && mkdir build/ThroBots.app/Contents/Resources/app.nw
