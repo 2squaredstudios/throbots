@@ -4,6 +4,7 @@ var player = parseInt(searchParams.get('player'));
 var address = searchParams.get('address');
 var name = searchParams.get('name');
 var ctx = $('#canvas').getContext('2d');
+ctx.fillStyle = 'dimgray';
 var fs = require('fs');
 var dead = false;
 var runScript = require('./speech.js');
@@ -58,9 +59,9 @@ for (var i = 0; i < 4; i++) {
   loadImage('player' + i + '/jump0');
   loadImage('player' + i + '/crouch0');
   if (i == 0) {
-    entityFrames['player' + i + '/left'] = 3;
-    entityFrames['player' + i + '/right'] = 3;
-    for (var j = 0; j < 3; j++) {
+    entityFrames['player' + i + '/left'] = 4;
+    entityFrames['player' + i + '/right'] = 4;
+    for (var j = 0; j < 4; j++) {
       loadImage('player' + i + '/left' + j);
       loadImage('player' + i + '/right' + j);
     }
@@ -79,7 +80,8 @@ loadImage('box1');
 loadImage('box2');
 entityFrames['box'] = 3;
 // join game
-request('http://' + address + '/join?entity=' + name + '&player=' + player, function(data) {
+images['player' + player + '/still0'].onload = function() {
+request('http://' + address + '/join?entity=' + name + '&player=' + player + '&width=' + images['player' + player + '/still0'].width + '&height=' + images['player' + player + '/still0'].height, function(data) {
   if (data == 'entity already exists') {
     alert('There is already a player with name ' + name + '!');
     document.location.href = 'index.html';
@@ -109,6 +111,7 @@ request('http://' + address + '/join?entity=' + name + '&player=' + player, func
     }
   }
 });
+}
 // game loop
 function loop() {
   if (entities.hasOwnProperty(name)) {
@@ -132,19 +135,28 @@ function loop() {
     }
     // draw platforms
     for (var i = 0; i < platforms.length; i++) {
-      ctx.drawImage(images[theme + 'platform'], Math.round(platforms[i].x - entities[name].x + 206), Math.round(platforms[i].y));
+      ctx.drawImage(images[theme + 'platform'], Math.round(platforms[i].x - entities[name].x + 192), Math.round(platforms[i].y - 34));
+      if (showFps) {
+        ctx.strokeStyle = 'white';
+        ctx.strokeRect(Math.round(platforms[i].x - entities[name].x + 192), Math.round(platforms[i].y - 34), 90, 27);
+      }
     }
     // draw entities and nametags
     for (var entity in entities) {
       ctx.drawImage(images[entities[entity].frame + (animationFrame % entityFrames[entities[entity].frame])], Math.round((entities[entity].x - entities[name].x) + 192), Math.round(entities[entity].y - 34));
       ctx.fillText(entity, Math.round((entities[entity].x - entities[name].x) + 192), Math.round(entities[entity].y - 34));
+      // draw hitboxes if requested
+      if (showFps) {
+        ctx.strokeStyle = 'white';
+        ctx.strokeRect(Math.round((entities[entity].x - entities[name].x) + 192), Math.round(entities[entity].y - 34), entities[entity].width, entities[entity].height);
+      }
     }
     // draw FPS indicator if wanted
     if (showFps) {
       ctx.fillText('FPS: ' + fps, 10, 10);
     }
     // draw next frame
-    requestAnimationFrame(loop)
+    requestAnimationFrame(loop);
   }
   // if we died or got kicked
   else {
@@ -337,6 +349,7 @@ $('#canvas').onclick = function(event) {
   var rect = $('#canvas').getBoundingClientRect();
   var clickX = Math.floor(((((event.clientX - rect.left) / parseInt($('#canvas').style.width)) * 384) - 192) / 5);
   var clickY = Math.floor(((((event.clientY - rect.top) / parseInt($('#canvas').style.height)) * 216) - 108) / 5);
+  console.log(clickX, clickY);
   request('http://' + address + '/throw?entity=' + name + '&x=' + clickX + '&y=' + clickY, function() {});
 }
 // fps management

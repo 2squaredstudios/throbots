@@ -10,6 +10,13 @@ var http = require('@thecoder08/http');
 var world = require('./' + process.argv[4]);
 var entities = world.entities;
 var platforms = world.platforms;
+// infer box dimensions
+for (var entity in entities) {
+  if (entity.includes('box')) {
+    entities[entity].width = 14;
+    entities[entity].height = 14;
+  }
+}
 // run entity scripts (enemy logic)
 for (var entity in entities) {
   if (entities[entity].hasOwnProperty('script')) {
@@ -66,14 +73,14 @@ for (var entity in entities) {
 }
 console.log('Loaded world ' + world.title);
 // create server that gets requests from users
-http.server(process.argv[2],   function(req, res) {
+http.server(process.argv[2], function(req, res) {
   // join request
   if (req.pathname == '/join') {
     if (entities.hasOwnProperty(req.query.entity)) {
       res(400, 'text/plain', 'entity already exists');
     }
     else {
-      entities[req.query.entity] = {x: 20, y: 10, yvelocity: 0, xvelocity: 0, crouchdown: false, leftdown: false, rightdown: false, frame: 'player' + req.query.player + '/still', thrown: false, pickedup: false};
+      entities[req.query.entity] = {x: 20, y: 10, width: parseInt(req.query.width), height: parseInt(req.query.height), yvelocity: 0, xvelocity: 0, crouchdown: false, leftdown: false, rightdown: false, frame: 'player' + req.query.player + '/still', thrown: false, pickedup: false};
       console.log(req.query.entity + ' joined the game!');
       res(200, 'text/plain', world.theme);
     }
@@ -265,6 +272,12 @@ function loop() {
   tps++;
   // loop through all entities
   for (var entity in entities) {
+    // you fall if you go below 300
+    if (entities[entity].y > 300) {
+      delete entities[entity];
+      console.log(entity + ' was yeeted off a cliff!');
+      continue;
+    }
     // physics
     entities[entity].x += entities[entity].xvelocity;
     entities[entity].y += entities[entity].yvelocity;
@@ -302,11 +315,11 @@ function loop() {
         }
         // if we hit our head
         if (entities[entity].yvelocity < 0) {
-          entities[entity].y = platforms[i].y + 40;
+          entities[entity].y = platforms[i].y + 27;
         }
         // if we were falling
-        else {
-          entities[entity].y = platforms[i].y + 1;
+        if (entities[entity].yvelocity > 0) {
+          entities[entity].y = platforms[i].y - entities[entity].height + 1;
         }
         entities[entity].yvelocity = 0;
         break;
@@ -317,13 +330,10 @@ function loop() {
       entities[entity].yvelocity += 0.1;
     }
     if (entities[entity].pickedup) {
-      entities[entity].x = entities[entities[entity].picker].x;
-      entities[entity].y = entities[entities[entity].picker].y - 5;
-    }
-    // you fall if you go below 300
-    if (entities[entity].y > 300) {
-      delete entities[entity];
-      console.log(entity + ' was yeeted off a cliff!');
+      if (entities.hasOwnProperty(entities[entity].picker)) {
+        entities[entity].x = entities[entities[entity].picker].x;
+        entities[entity].y = entities[entities[entity].picker].y - 5;
+      }
     }
   }
 }
@@ -366,7 +376,7 @@ function findClosest(me) {
   var names = [];
   for (var entity in entities) {
     var distance = Math.hypot(entities[entity].x - entities[me].x, entities[entity].y - entities[me].y);
-    if ((entity != me) && distance < 100) {
+    if ((entity != me) && distance < 50) {
       names.push(entity);
       distances.push(distance);
     }
@@ -379,6 +389,9 @@ function findClosest(me) {
   }
 }
 
-function collide(entity, platform) {
-  return (entity.x > platform.x) && (entity.x < (platform.x + 83)) && (entity.y > platform.y) && (entity.y < (platform.y + 9));
+function collide(obj1, obj2) {
+  return obj1.x < obj2.x + 90 &&
+         obj1.x + obj1.width > obj2.x &&
+         obj1.y < obj2.y + 27 &&
+         obj1.y + obj1.height > obj2.y;
 }

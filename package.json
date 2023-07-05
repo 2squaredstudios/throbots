@@ -17,8 +17,8 @@
     "node-wiimote": "^0.2.0"
   },
   "window": {
-    "width": 868,
-    "height": 480,
+    "width": 768,
+    "height": 432,
     "fullscreen": true
   }
 }
