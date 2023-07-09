@@ -3,8 +3,7 @@ var searchParams = new URL(document.location.href).searchParams;
 var player = parseInt(searchParams.get('player'));
 var address = searchParams.get('address');
 var name = searchParams.get('name');
-var ctx = $('#canvas').getContext('2d');
-ctx.fillStyle = 'dimgray';
+var ctx = $('canvas').getContext('2d');
 var fs = require('fs');
 var dead = false;
 var runScript = require('./speech.js');
@@ -22,18 +21,21 @@ var leftDown = false;
 var rightDown = false;
 var buttons = [];
 var animationFrame = 0;
+var aiming = false;
+var throwX = 0;
+var throwY = 0;
 // resize canvas
 var ngui = require('nw.gui');
 var nwin = ngui.Window.get();
 function resize() {
   var aspectratio = window.innerWidth / window.innerHeight;
   if (aspectratio > 1.77) {
-    $('#canvas').style.width = Math.round((window.innerHeight / 9) * 16).toString() + 'px';
-    $('#canvas').style.height = window.innerHeight.toString() + 'px';
+    $('canvas').style.width = Math.round((window.innerHeight / 9) * 16).toString() + 'px';
+    $('canvas').style.height = window.innerHeight.toString() + 'px';
   }
   else {
-    $('#canvas').style.height = Math.round((window.innerWidth / 16) * 9).toString() + 'px';
-    $('#canvas').style.width = window.innerWidth.toString() + 'px';
+    $('canvas').style.height = Math.round((window.innerWidth / 16) * 9).toString() + 'px';
+    $('canvas').style.width = window.innerWidth.toString() + 'px';
   }
 }
 resize();
@@ -114,6 +116,7 @@ request('http://' + address + '/join?entity=' + name + '&player=' + player + '&w
 }
 // game loop
 function loop() {
+  ctx.fillStyle = 'dimgray';
   if (entities.hasOwnProperty(name)) {
     // client-side prediction
     if (leftDown) {
@@ -154,6 +157,13 @@ function loop() {
     // draw FPS indicator if wanted
     if (showFps) {
       ctx.fillText('FPS: ' + fps, 10, 10);
+    }
+    // draw aiming line
+    if (aiming) {
+      ctx.fillStyle = 'white';
+      for (var i = 0; i < 100; i += 1) {
+        ctx.fillRect(192 + (throwX / 20 * i), (entities[name].y - 5 - 34) + (throwY / 20 * i) + (0.05 * (i * i)), 1, 1);
+      }
     }
     // draw next frame
     requestAnimationFrame(loop);
@@ -344,13 +354,20 @@ function buttonUp(button) {
     request('http://' + address + '/crouchup?entity=' + name, function() {});
   }
 }
-// throw nearest entity on click
-$('#canvas').onclick = function(event) {
-  var rect = $('#canvas').getBoundingClientRect();
-  var clickX = Math.floor(((((event.clientX - rect.left) / parseInt($('#canvas').style.width)) * 384) - 192) / 5);
-  var clickY = Math.floor(((((event.clientY - rect.top) / parseInt($('#canvas').style.height)) * 216) - 108) / 5);
-  console.log(clickX, clickY);
-  request('http://' + address + '/throw?entity=' + name + '&x=' + clickX + '&y=' + clickY, function() {});
+// display parabola
+$('canvas').onmousedown = function() {
+  aiming = true;
+}
+// calculate throw velocities
+$('canvas').onmousemove = function(event) {
+  var rect = $('canvas').getBoundingClientRect();
+  throwX = Math.round(((event.clientX - rect.left) / parseInt($('canvas').style.width)) * 384 - 192);
+  throwY = Math.round(((event.clientY - rect.top) / parseInt($('canvas').style.height)) * 216 - 216);
+}
+// throw nearest entity
+$('canvas').onmouseup = function() {
+  aiming = false;
+  request('http://' + address + '/throw?entity=' + name + '&x=' + throwX + '&y=' + throwY, function() {});
 }
 // fps management
 setInterval(function() {

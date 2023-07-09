@@ -187,34 +187,25 @@ http.server(process.argv[2], function(req, res) {
       res(404, 'text/plain', 'entity not found');
     }
   }
-  // throwing
+  // throw picked up entity
   else if (req.pathname == '/throw') {
     if (entities.hasOwnProperty(req.query.entity)) {
       if (entities[req.query.entity].crouchdown) {
         res(400, 'text/plain', 'could not throw, crouched');
       }
       else {
-        var closest = findClosest(req.query.entity);
+        var closest = findPickedEntity(req.query.entity);
         if (closest) {
-          if (entities[closest].thrown) {
-            res(400, 'text/plain', 'being thrown');
-          }
-          else {
-            if (entities[closest].crouchdown) {
-              res(400, 'text/plain', 'crouched');
-            }
-            else {
-              entities[closest].yvelocity = parseInt(req.query.y);
-              entities[closest].xvelocity = parseInt(req.query.x);
+              entities[closest].yvelocity = parseInt(req.query.y) / 20;
+              entities[closest].xvelocity = parseInt(req.query.x) / 20;
               entities[closest].thrown = true;
               entities[closest].pickedup = false;
+              entities[closest].picker = '';
               console.log(req.query.entity + ' throwing ' + closest);
               res(200, 'text/plain', 'ok');
-            }
-          }
         }
         else {
-          res(400, 'text/plain', 'no throwable entities');
+          res(400, 'text/plain', 'no entity picked up');
         }
       }
     }
@@ -229,31 +220,39 @@ http.server(process.argv[2], function(req, res) {
         res(400, 'text/plain', 'could not pick up, crouched');
       }
       else {
-        var closest = findClosest(req.query.entity);
-        if (closest) {
-          if (entities[closest].thrown) {
-            res(400, 'text/plain', 'being thrown');
-          }
-          else {
-            if (entities[closest].crouchdown) {
-              res(400, 'text/plain', 'crouched');
-            }
-            else {
-              if (entities[closest].pickedup) {
-                entities[closest].pickedup = false;
-                console.log(req.query.entity + ' dropping ' + closest);
-              }
-              else {
-                console.log(req.query.entity + ' picking up ' + closest);
-                entities[closest].pickedup = true;
-                entities[closest].picker = req.query.entity;
-              }
-              res(200, 'text/plain', 'ok');
-            }
-          }
+        if (entities[req.query.entity].pickedup) {
+          res(400, 'text/plain', 'could not pick up, picked up by someone else');
         }
         else {
-          res(400, 'text/plain', 'no pickupable entities');
+          var closest = findClosest(req.query.entity);
+          if (closest) {
+            if (entities[closest].thrown) {
+              res(400, 'text/plain', 'being thrown');
+            }
+            else {
+              if (entities[closest].crouchdown) {
+                res(400, 'text/plain', 'crouched');
+              }
+              else {
+                if (entities[closest].pickedup) {
+                  if (entities[closest].picker == req.query.entity) {
+                    console.log(req.query.entity + ' dropping ' + closest);
+                    entities[closest].pickedup = false;
+                    entities[closest].picker = '';
+                  }
+                }
+                else {
+                  console.log(req.query.entity + ' picking up ' + closest);
+                  entities[closest].pickedup = true;
+                  entities[closest].picker = req.query.entity;
+                }
+                res(200, 'text/plain', 'ok');
+              }
+            }
+          }
+          else {
+            res(400, 'text/plain', 'no pickupable entities');
+          }
         }
       }
     }
@@ -272,20 +271,14 @@ function loop() {
   tps++;
   // loop through all entities
   for (var entity in entities) {
+    // physics
+    entities[entity].x += entities[entity].xvelocity;
+    entities[entity].y += entities[entity].yvelocity;
     // you fall if you go below 300
     if (entities[entity].y > 300) {
       delete entities[entity];
       console.log(entity + ' was yeeted off a cliff!');
       continue;
-    }
-    // physics
-    entities[entity].x += entities[entity].xvelocity;
-    entities[entity].y += entities[entity].yvelocity;
-    if (entities[entity].xvelocity > 0) {
-      entities[entity].xvelocity -= 0.1;
-    }
-    if (entities[entity].xvelocity < 0) {
-      entities[entity].xvelocity += 0.1;
     }
     // move left and right if it's ok to do so
     if (entities[entity].leftdown && !(entities[entity].thrown || entities[entity].crouchdown || entities[entity].pickedup)) {
@@ -318,8 +311,8 @@ function loop() {
           entities[entity].y = platforms[i].y + 27;
         }
         // if we were falling
-        if (entities[entity].yvelocity > 0) {
-          entities[entity].y = platforms[i].y - entities[entity].height + 1;
+        else {
+          entities[entity].y = platforms[i].y - entities[entity].height;
         }
         entities[entity].yvelocity = 0;
         break;
@@ -329,6 +322,7 @@ function loop() {
     if (!touchingPlatform && !entities[entity].pickedup) {
       entities[entity].yvelocity += 0.1;
     }
+    // hover if picked up
     if (entities[entity].pickedup) {
       if (entities.hasOwnProperty(entities[entity].picker)) {
         entities[entity].x = entities[entities[entity].picker].x;
@@ -388,10 +382,18 @@ function findClosest(me) {
     return "";
   }
 }
-
+// find entity that is being picked up
+function findPickedEntity(me) {
+  for (var entity in entities) {
+    if (entities[entity].picker == me) {
+      return entity;
+    }
+  }
+}
+// collision detection
 function collide(obj1, obj2) {
   return obj1.x < obj2.x + 90 &&
          obj1.x + obj1.width > obj2.x &&
          obj1.y < obj2.y + 27 &&
-         obj1.y + obj1.height > obj2.y;
+         obj1.y + obj1.height > obj2.y - 1;
 }
