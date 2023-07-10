@@ -37,7 +37,7 @@ function loop() {
     ctx.drawImage(entity, mousepos.x, mousepos.y);
   }
   if (selection == 'levelend') {
-    ctx.drawImage(levelend, mousepos.x, mousepos.y);
+    try{ctx.drawImage(levelend, mousepos.x, mousepos.y);}catch(e){};
   }
   requestAnimationFrame(loop);
 };

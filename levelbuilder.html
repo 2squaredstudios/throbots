@@ -11,6 +11,7 @@
     <hr>
     <button onclick="save();">Save Level</button><button onclick="load();">Load Level</button> Level Name: <input placeholder="My Awesome Level" id="name">
     <hr>
+    <p style="display: inline-block;">
     Theme:<br>
     Sky: <input type="radio" name="theme" value="sky" checked><br>
     Desert: <input type="radio" name="theme" value="desert"><br>
@@ -18,7 +19,9 @@
     Snow: <input type="radio" name="theme" value="snow"><br>
     Jungle: <input type="radio" name="theme" value="jungle"><br>
     Cave: <input type="radio" name="theme" value="cave"><br>
-    Red: <input type="radio" name="theme" value="red"><br>
+    Red: <input type="radio" name="theme" value="red">
+    </p>
+    <textarea style="display: inline-block; float: right;" cols="80" rows="40">Edit this text to script an entity.</textarea>
     <hr>
     <button onclick="selection = 'entity';">Entity</button><button onclick="selection = 'platform';">Platform</button><button onclick="selection = 'levelend';">Level End</button>
     <script src="node_modules/@thecoder08/docuget/main.js"></script>

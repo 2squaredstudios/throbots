@@ -95,8 +95,12 @@ request('http://' + address + '/join?entity=' + name + '&player=' + player + '&w
     // load theme-specific assets
     loadImage(theme);
     loadImage(theme + 'platform');
-    loadImage(theme + 'enemyleft');
-    loadImage(theme + 'enemyright');
+    loadImage(theme + 'enemyleft0');
+    loadImage(theme + 'enemyright0');
+    loadImage(theme + 'enemyleft1');
+    loadImage(theme + 'enemyright1');
+    entityFrames[theme + 'enemyleft'] = 2;
+    entityFrames[theme + 'enemyright'] = 2;
     loadImage(theme + 'end');
     themesong.src = 'audio/' + theme + '.wav';
     themesong.loop = true;
@@ -151,7 +155,9 @@ function loop() {
     // draw entities and nametags
     for (var entity in entities) {
       ctx.drawImage(images[entities[entity].frame + (animationFrame % entityFrames[entities[entity].frame])], Math.round((entities[entity].x - entities[name].x) + 192), Math.round(entities[entity].y - 34));
-      ctx.fillText(entity, Math.round((entities[entity].x - entities[name].x) + 192), Math.round(entities[entity].y - 34));
+      if (entities[entity].player) {
+        ctx.fillText(entity, Math.round((entities[entity].x - entities[name].x) + 192), Math.round(entities[entity].y - 34));
+      }
       // draw hitboxes if requested
       if (showFps) {
         ctx.strokeStyle = 'white';

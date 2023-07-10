@@ -16,6 +16,10 @@ for (var entity in entities) {
     entities[entity].width = 14;
     entities[entity].height = 14;
   }
+  if (entity.includes('enemy')) {
+    entities[entity].width = 25;
+    entities[entity].height = 25;
+  }
 }
 // run entity scripts (enemy logic)
 for (var entity in entities) {
@@ -66,9 +70,14 @@ for (var entity in entities) {
         if (entities.hasOwnProperty(entity)) {
           entities[entity].frame = frame;
         }
+      },
+      wait: function(delay) {
+        return new Promise(function(resolve, reject) {
+          setTimeout(resolve, delay);
+        });
       }
     }
-    eval(entities[entity].script);
+    eval('(async function(){' + entities[entity].script + '})();');
   }
 }
 console.log('Loaded world ' + world.title);
@@ -80,7 +89,7 @@ http.server(process.argv[2], function(req, res) {
       res(400, 'text/plain', 'entity already exists');
     }
     else {
-      entities[req.query.entity] = {x: 20, y: 10, width: parseInt(req.query.width), height: parseInt(req.query.height), yvelocity: 0, xvelocity: 0, crouchdown: false, leftdown: false, rightdown: false, frame: 'player' + req.query.player + '/still', thrown: false, pickedup: false};
+      entities[req.query.entity] = {x: 20, y: 10, width: parseInt(req.query.width), height: parseInt(req.query.height), yvelocity: 0, xvelocity: 0, crouchdown: false, leftdown: false, rightdown: false, frame: 'player' + req.query.player + '/still', thrown: false, pickedup: false, player: true};
       console.log(req.query.entity + ' joined the game!');
       res(200, 'text/plain', JSON.stringify({theme: world.theme, end: world.end}));
     }
@@ -330,7 +339,7 @@ function loop() {
       }
     }
     // win condition
-    if (collideEnd(entities[entity], world.end)) {
+    if (collideEnd(entities[entity], world.end) && entities[entity].player) {
       for (var otherentity in entities) {
         entities[otherentity].winner = false;
       }
