@@ -82,7 +82,7 @@ http.server(process.argv[2], function(req, res) {
     else {
       entities[req.query.entity] = {x: 20, y: 10, width: parseInt(req.query.width), height: parseInt(req.query.height), yvelocity: 0, xvelocity: 0, crouchdown: false, leftdown: false, rightdown: false, frame: 'player' + req.query.player + '/still', thrown: false, pickedup: false};
       console.log(req.query.entity + ' joined the game!');
-      res(200, 'text/plain', world.theme);
+      res(200, 'text/plain', JSON.stringify({theme: world.theme, end: world.end}));
     }
   }
   // leave request
@@ -329,6 +329,15 @@ function loop() {
         entities[entity].y = entities[entities[entity].picker].y - 5;
       }
     }
+    // win condition
+    if (collideEnd(entities[entity], world.end)) {
+      for (var otherentity in entities) {
+        entities[otherentity].winner = false;
+      }
+      entities[entity].winner = true;
+      clearInterval(loopInterval);
+      console.log(entity + ' won, restart server.');
+    }
   }
 }
 // interval controllers
@@ -336,7 +345,7 @@ setInterval(function() {
   process.stdout.write('TPS: ' + tps + '\r');
   tps = 0;
 }, 1000);
-setInterval(loop, 1000 / parseInt(process.argv[3]));
+var loopInterval = setInterval(loop, 1000 / parseInt(process.argv[3]));
 // kicking
 process.stdin.on('data', function(data) {
   var kickee = data.toString().split('\n')[0];
@@ -396,4 +405,11 @@ function collide(obj1, obj2) {
          obj1.x + obj1.width > obj2.x &&
          obj1.y < obj2.y + 27 &&
          obj1.y + obj1.height > obj2.y - 1;
+}
+// collision detection with end post
+function collideEnd(obj1, obj2) {
+  return obj1.x < obj2.x + 50 &&
+         obj1.x + obj1.width > obj2.x &&
+         obj1.y < obj2.y + 200 &&
+         obj1.y + obj1.height > obj2.y;
 }

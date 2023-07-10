@@ -9,6 +9,7 @@ var dead = false;
 var runScript = require('./speech.js');
 var speechBox = '';
 var theme = '';
+var end = {x: 0, y: 0};
 var themesong = new Audio();
 var images = {};
 var fpscounter = 0;
@@ -89,12 +90,14 @@ request('http://' + address + '/join?entity=' + name + '&player=' + player + '&w
     document.location.href = 'index.html';
   }
   else {
-    theme = data;
+    theme = JSON.parse(data).theme;
+    end = JSON.parse(data).end;
     // load theme-specific assets
     loadImage(theme);
     loadImage(theme + 'platform');
     loadImage(theme + 'enemyleft');
     loadImage(theme + 'enemyright');
+    loadImage(theme + 'end');
     themesong.src = 'audio/' + theme + '.wav';
     themesong.loop = true;
     themesong.play();
@@ -139,6 +142,7 @@ function loop() {
     // draw platforms
     for (var i = 0; i < platforms.length; i++) {
       ctx.drawImage(images[theme + 'platform'], Math.round(platforms[i].x - entities[name].x + 192), Math.round(platforms[i].y - 34));
+      // draw hitboxes if requested
       if (showFps) {
         ctx.strokeStyle = 'white';
         ctx.strokeRect(Math.round(platforms[i].x - entities[name].x + 192), Math.round(platforms[i].y - 34), 90, 27);
@@ -154,9 +158,13 @@ function loop() {
         ctx.strokeRect(Math.round((entities[entity].x - entities[name].x) + 192), Math.round(entities[entity].y - 34), entities[entity].width, entities[entity].height);
       }
     }
-    // draw FPS indicator if wanted
+    // draw end post
+    ctx.drawImage(images[theme + 'end'], Math.round(end.x - entities[name].x + 192), Math.round(end.y - 34));
+    // draw FPS indicator and end hitbox if wanted
     if (showFps) {
       ctx.fillText('FPS: ' + fps, 10, 10);
+      ctx.strokeStyle = 'white';
+      ctx.strokeRect(Math.round(end.x - entities[name].x + 192), Math.round(end.y - 34), 50, 200);
     }
     // draw aiming line
     if (aiming) {
@@ -165,12 +173,41 @@ function loop() {
         ctx.fillRect(192 + (throwX / 20 * i), (entities[name].y - 5 - 34) + (throwY / 20 * i) + (0.05 * (i * i)), 1, 1);
       }
     }
-    // draw next frame
-    requestAnimationFrame(loop);
+    // if someone won
+    if (entities[name].hasOwnProperty('winner')) {
+      ctx.fillStyle = 'white';
+      // display background
+      ctx.drawImage(images['dead'], 0, 0);
+      // stop theme song
+      themesong.pause();
+      // wait 1 second
+      setTimeout(function() {
+        if (entities[name].winner) {
+          // we won!
+          ctx.fillText('You won!\nPress ESC to disconnect.', 10, 10);
+          // play win song
+          var winsong = new Audio();
+          winsong.src = 'audio/levelend.wav';
+          winsong.play();
+        }
+        else {
+          // we lost...
+          ctx.fillText('You lost.\nPress ESC to disconnect.', 10, 10);
+          // play death song
+          var deathsong = new Audio();
+          deathsong.src = 'audio/death.wav';
+          deathsong.play();
+        }
+      }, 1000);
+    }
+    else {
+      // draw next frame
+      requestAnimationFrame(loop);
+    }
   }
   // if we died or got kicked
   else {
-    // display red background
+    // display background
     ctx.drawImage(images['dead'], 0, 0);
     // stop theme song
     themesong.pause();

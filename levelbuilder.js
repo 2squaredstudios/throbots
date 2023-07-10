@@ -3,25 +3,23 @@ var selection = 'platform';
 var ctx = $('#canvas').getContext('2d');
 var platforms = [];
 var entities = {};
+var end = {x: 0, y: 0};
 var rect = $('#canvas').getBoundingClientRect();
 var entity = new Image();
 var background = new Image();
 var platform = new Image();
+var levelend = new Image();
 var mousepos = {x: 0, y: 0};
 entity.src = 'images/entitytemplate.png';
 background.src = 'images/' + $('input[name="theme"]:checked').value + '.png';
 platform.src = 'images/' + $('input[name="theme"]:checked').value + 'platform.png';
-function selectplatform() {
-  selection = 'platform';
-}
-function selectentity() {
-  selection = 'entity';
-}
+levelend.src = 'images/' + $('input[name="theme"]:checked').value + 'end.png';
 requestAnimationFrame(loop);
 function loop() {
   if (!background.src.includes($('input[name="theme"]:checked').value)) {
     background.src = 'images/' + $('input[name="theme"]:checked').value + '.png';
     platform.src = 'images/' + $('input[name="theme"]:checked').value + 'platform.png';
+    levelend.src = 'images/' + $('input[name="theme"]:checked').value + 'end.png';
   }
   ctx.drawImage(background, 0, 0);
   ctx.drawImage(background, 384, 0);
@@ -31,11 +29,15 @@ function loop() {
   for (var entityid in entities) {
     ctx.drawImage(entity, entities[entityid].x, entities[entityid].y);
   }
+  try{ctx.drawImage(levelend, end.x, end.y);}catch(e){};
   if (selection == 'platform') {
     ctx.drawImage(platform, mousepos.x, mousepos.y);
   }
-  else {
+  if (selection == 'entity') {
     ctx.drawImage(entity, mousepos.x, mousepos.y);
+  }
+  if (selection == 'levelend') {
+    ctx.drawImage(levelend, mousepos.x, mousepos.y);
   }
   requestAnimationFrame(loop);
 };
@@ -48,12 +50,15 @@ $('#canvas').onclick = function(event) {
   if (selection == 'platform') {
     platforms.push({x: clickX, y: clickY});
   }
-  else {
+  if (selection == 'entity') {
     entities[prompt('Enter entity name')] = {x: clickX, y: clickY, yvelocity: 0, xvelocity: 0, crouchdown: false, leftdown: false, rightdown: false, frame: prompt('Enter frame'), thrown: false, pickedup: false};
+  }
+  if (selection == 'levelend') {
+    end = {x: clickX, y: clickY};
   }
 }
 function save() {
-  fs.writeFile(prompt('Enter world file'), JSON.stringify({title: $('#name').value, entities: entities, platforms: platforms, theme: $('input[name="theme"]:checked').value}), function(err) {
+  fs.writeFile(prompt('Enter world file'), JSON.stringify({title: $('#name').value, entities: entities, platforms: platforms, theme: $('input[name="theme"]:checked').value, end: end}), function(err) {
     if (err) {
       alert('Error writing file!');
     }
@@ -72,6 +77,7 @@ function load() {
       $('input[value="' + level.theme + '"]').checked = true;
       platforms = level.platforms;
       entities = level.entities;
+      end = level.end;
       $('#name').value = level.title;
       alert('File loaded!');
     }
