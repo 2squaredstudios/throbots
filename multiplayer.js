@@ -1,4 +1,4 @@
-var lennetServer = 'throbots.ddns.net';
+var lennetServer = 'throbots-useast.ddns.net';
 function player1() {
   if ($('#dedicated').checked) {
     document.location.href = 'game.html?name=' + $('#name').value + '&player=0&address=' + $('#address').value;

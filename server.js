@@ -1,8 +1,13 @@
 if (process.argv.length < 5) {
   console.log('Usage:');
-  console.log('./server.js [port] [maxtps] [worldfile]');
+  console.log('./server.js [port] [maxtps] [worldfile] [timeout]');
 }
 else {
+var closeTimeout;
+var autoClose = false;
+if (process.argv[5] === 'true') {
+  autoClose = true;
+}
 var tps = 0;
 // load world file
 console.log('Loading...');
@@ -23,7 +28,7 @@ for (var entity in entities) {
 }
 // run entity scripts (enemy logic)
 for (var entity in entities) {
-  if (entities[entity].hasOwnProperty('script')) {
+  if (entities[entity].hasOwnProperty('scripsett')) {
     var script = {
       left: function() {
         if (entities.hasOwnProperty(entity)) {
@@ -92,6 +97,10 @@ http.server(process.argv[2], function(req, res) {
       entities[req.query.entity] = {x: 20, y: 10, width: parseInt(req.query.width), height: parseInt(req.query.height), yvelocity: 0, xvelocity: 0, crouchdown: false, leftdown: false, rightdown: false, frame: 'player' + req.query.player + '/still', thrown: false, pickedup: false, player: true};
       console.log(req.query.entity + ' joined the game!');
       res(200, 'text/plain', JSON.stringify({theme: world.theme, end: world.end}));
+      // clear timeout to close empty lobby
+      if (autoClose) {
+        clearTimeout(closeTimeout);
+      }
     }
   }
   // leave request
@@ -100,6 +109,16 @@ http.server(process.argv[2], function(req, res) {
       delete entities[req.query.entity];
       console.log(req.query.entity + ' left the game!');
       res(200, 'text/plain', 'left successfully');
+      // set timeout to close empty lobby
+      var playersOnline = 0;
+      for (var entity in entities) {
+        if (entities[entity].player) {
+          playersOnline++;
+        }
+      }
+      if (autoClose && (playersOnline == 0)) {
+        closeTimeout = setTimeout(closeServer, 30000);
+      }
     }
     else {
       res(404, 'text/plain', 'entity not found');
@@ -287,6 +306,16 @@ function loop() {
     if (entities[entity].y > 300) {
       delete entities[entity];
       console.log(entity + ' was yeeted off a cliff!');
+      // set timeout to close empty lobby
+      var playersOnline = 0;
+      for (var entity in entities) {
+        if (entities[entity].player) {
+          playersOnline++;
+        }
+      }
+      if (autoClose && (playersOnline == 0)) {
+        closeTimeout = setTimeout(closeServer, 30000);
+      }
       continue;
     }
     // move left and right if it's ok to do so
@@ -346,6 +375,10 @@ function loop() {
       entities[entity].winner = true;
       clearInterval(loopInterval);
       console.log(entity + ' won, restart server.');
+      if (autoClose) {
+        console.log('autoClose enabled, closing automatically');
+        process.exit();
+      }
     }
   }
 }
@@ -360,6 +393,16 @@ process.stdin.on('data', function(data) {
   var kickee = data.toString().split('\n')[0];
   if (entities.hasOwnProperty(kickee)) {
     delete entities[kickee];
+    // set timeout to close empty lobby
+    var playersOnline = 0;
+    for (var entity in entities) {
+      if (entities[entity].player) {
+        playersOnline++;
+      }
+    }
+    if (autoClose && (playersOnline == 0)) {
+      closeTimeout = setTimeout(closeServer, 30000);
+    }
     console.log(kickee + ' was kicked from the server!');
   }
   else {
@@ -421,4 +464,13 @@ function collideEnd(obj1, obj2) {
          obj1.x + obj1.width > obj2.x &&
          obj1.y < obj2.y + 200 &&
          obj1.y + obj1.height > obj2.y;
+}
+function closeServer() {
+  console.log('Server is being closed as it has been unoccupied for 30 seconds.');
+  process.exit();
+}
+// set initial close timeout
+if (autoClose) {
+  console.log('timeout set');
+  closeTimeout = setTimeout(closeServer, 30000);
 }
