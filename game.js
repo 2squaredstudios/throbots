@@ -85,39 +85,41 @@ entityFrames['box'] = 3;
 // join game
 images['player' + player + '/still0'].onload = function() {
 request('http://' + address + '/join?entity=' + name + '&player=' + player + '&width=' + images['player' + player + '/still0'].width + '&height=' + images['player' + player + '/still0'].height, function(data) {
-  if (data == 'entity already exists') {
+  if (data === undefined) {
+    alert('Error connecting to server! (Is it still up?)');
+    document.location.href = 'index.html';
+  }
+  if (data === 'entity already exists') {
     alert('There is already a player with name ' + name + '!');
     document.location.href = 'index.html';
   }
-  else {
-    theme = JSON.parse(data).theme;
-    end = JSON.parse(data).end;
-    // load theme-specific assets
-    loadImage(theme);
-    loadImage(theme + 'platform');
-    loadImage(theme + 'enemyleft0');
-    loadImage(theme + 'enemyright0');
-    loadImage(theme + 'enemyleft1');
-    loadImage(theme + 'enemyright1');
-    entityFrames[theme + 'enemyleft'] = 2;
-    entityFrames[theme + 'enemyright'] = 2;
-    loadImage(theme + 'end');
-    themesong.src = 'audio/' + theme + '.wav';
-    themesong.loop = true;
-    themesong.play();
-    images[theme].onload = function() {
-      // inital fetch
-      fetchloop(function() {
-      // start fetch loop
-      setInterval(fetchloop, 1000 / 30);
-      // start game loop
-      requestAnimationFrame(loop);
-      // start animation loop
-      setInterval(function() {
-        animationFrame++;
-      }, 125);
-      });
-    }
+  theme = JSON.parse(data).theme;
+  end = JSON.parse(data).end;
+  // load theme-specific assets
+  loadImage(theme);
+  loadImage(theme + 'platform');
+  loadImage(theme + 'enemyleft0');
+  loadImage(theme + 'enemyright0');
+  loadImage(theme + 'enemyleft1');
+  loadImage(theme + 'enemyright1');
+  entityFrames[theme + 'enemyleft'] = 2;
+  entityFrames[theme + 'enemyright'] = 2;
+  loadImage(theme + 'end');
+  themesong.src = 'audio/' + theme + '.wav';
+  themesong.loop = true;
+  themesong.play();
+  images[theme].onload = function() {
+    // inital fetch
+    fetchloop(function() {
+    // start fetch loop
+    setInterval(fetchloop, 1000 / 30);
+    // start game loop
+    requestAnimationFrame(loop);
+    // start animation loop
+    setInterval(function() {
+      animationFrame++;
+    }, 125);
+    });
   }
 });
 }
