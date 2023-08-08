@@ -376,8 +376,10 @@ function loop() {
       clearInterval(loopInterval);
       console.log(entity + ' won, restart server.');
       if (autoClose) {
-        console.log('autoClose enabled, closing automatically');
-        process.exit();
+        setTimeout(function() {
+          console.log('autoClose enabled, closing automatically');
+          process.exit();
+        }, 5000);
       }
     }
   }
@@ -471,6 +473,5 @@ function closeServer() {
 }
 // set initial close timeout
 if (autoClose) {
-  console.log('timeout set');
   closeTimeout = setTimeout(closeServer, 30000);
 }
