@@ -88,7 +88,6 @@ entityFrames['box'] = 3;
 // join game
 images['player' + player + '/still0'].onload = function() {
 request('http://' + address + '/join?entity=' + name + '&player=' + player + '&width=' + images['player' + player + '/still0'].width + '&height=' + images['player' + player + '/still0'].height, function(data) {
-  console.log(data);
   if (data === undefined) {
     alert('Error connecting to server! (Is it still up?)');
     document.location.href = 'index.html';
