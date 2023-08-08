@@ -140,7 +140,7 @@ function loop() {
     }
     t += 0.02; // we get this from fetchrate (10 fetches per second) / framerate (60 frames per second)
   }
-  if (entities.hasOwnProperty(name)) {
+  if (newentities.hasOwnProperty(name)) {
     // client-side prediction
     if (leftDown) {
       entities[name].x--;
