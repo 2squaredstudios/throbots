@@ -28,7 +28,7 @@ for (var entity in entities) {
 }
 // run entity scripts (enemy logic)
 for (var entity in entities) {
-  if (entities[entity].hasOwnProperty('scripsett')) {
+  if (entities[entity].hasOwnProperty('script')) {
     var script = {
       left: function() {
         if (entities.hasOwnProperty(entity)) {

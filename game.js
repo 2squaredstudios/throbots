@@ -16,6 +16,9 @@ var fpscounter = 0;
 var showFps = false;
 var fps = 0;
 var platforms = [];
+var t = 0;
+var oldentities = {};
+var newentities = {};
 var entities = {};
 var entityFrames = {};
 var leftDown = false;
@@ -85,6 +88,7 @@ entityFrames['box'] = 3;
 // join game
 images['player' + player + '/still0'].onload = function() {
 request('http://' + address + '/join?entity=' + name + '&player=' + player + '&width=' + images['player' + player + '/still0'].width + '&height=' + images['player' + player + '/still0'].height, function(data) {
+  console.log(data);
   if (data === undefined) {
     alert('Error connecting to server! (Is it still up?)');
     document.location.href = 'index.html';
@@ -112,7 +116,7 @@ request('http://' + address + '/join?entity=' + name + '&player=' + player + '&w
     // inital fetch
     fetchloop(function() {
     // start fetch loop
-    setInterval(fetchloop, 1000 / 30);
+    setInterval(fetchloop, 100);
     // start game loop
     requestAnimationFrame(loop);
     // start animation loop
@@ -126,6 +130,17 @@ request('http://' + address + '/join?entity=' + name + '&player=' + player + '&w
 // game loop
 function loop() {
   ctx.fillStyle = 'dimgray';
+  // entity interpolation
+  for (var entity in newentities) {
+    // case for first fetch
+    if (oldentities[entity] === undefined) {
+      entities[entity] = newentities[entity];
+    }
+    else {
+      entities[entity] = lerp(oldentities[entity], newentities[entity], t);
+    }
+    t += 0.02; // we get this from fetchrate (10 fetches per second) / framerate (60 frames per second)
+  }
   if (entities.hasOwnProperty(name)) {
     // client-side prediction
     if (leftDown) {
@@ -251,7 +266,9 @@ setInterval(function() {
 // fetch loop
 function fetchloop(fetched) {
   request('http://' + address + '/getentities', function(data) {
-    entities = JSON.parse(data);
+    t = 0;
+    oldentities = structuredClone(newentities);
+    newentities = JSON.parse(data);
     try {
       fetched();
     }
@@ -419,3 +436,10 @@ setInterval(function() {
   fps = fpscounter;
   fpscounter = 0;
 }, 1000);
+
+function lerp(oldentity, newentity, t) {
+  var lerpentity = structuredClone(newentity);
+  lerpentity.x = oldentity.x + t * (newentity.x - oldentity.x);
+  lerpentity.y = oldentity.y + t * (newentity.y - oldentity.y);
+  return lerpentity;
+}
