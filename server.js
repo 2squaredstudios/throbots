@@ -80,6 +80,55 @@ for (var entity in entities) {
         return new Promise(function(resolve, reject) {
           setTimeout(resolve, delay);
         });
+      },
+      pickup: function() {
+        if (!entities.hasOwnProperty(entity)) {
+          return false;
+        }
+        script.stop();
+        if (entities[entity].pickedup) {
+          return false;
+        }
+        var closest = findClosest(entity);
+        if (!closest) {
+          return false;
+        }
+        if (entities[closest].thrown) {
+          return false;
+        }
+        if (entities[closest].crouchdown) {
+          return false;
+        }
+        if (entities[closest].pickedup) {
+          if (entities[closest].picker == entity) {
+            console.log(entity + ' dropping ' + closest);
+            entities[closest].pickedup = false;
+            entities[closest].picker = '';
+          }
+        }
+        else {
+          console.log(entity + ' picking up ' + closest);
+          entities[closest].pickedup = true;
+          entities[closest].picker = entity;
+        }
+        return true;
+      },
+      throw: function(x, y) {
+        if (!entities.hasOwnProperty(entity)) {
+          return false;
+        }
+        script.stop();
+        var closest = findPickedEntity(entity);
+        if (!closest) {
+          return false;
+        }
+        entities[closest].yvelocity = y / 20;
+        entities[closest].xvelocity = x / 20;
+        entities[closest].thrown = true;
+        entities[closest].pickedup = false;
+        entities[closest].picker = '';
+        console.log(entity + ' throwing ' + closest);
+        return true;
       }
     }
     eval('(async function(){' + entities[entity].script + '})();');

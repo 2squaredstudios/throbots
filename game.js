@@ -135,7 +135,7 @@ function loop() {
     for (var entity in newentities) {
       // case for first fetch
       if (oldentities[entity] !== undefined) {
-        if (entity == name) {
+        if (entity == name && !newentities[entity].thrown) { // fall back to interpolation if being thrown
           // client side prediction for player's x position
           if (leftDown) {
             newentities[name].x--;
