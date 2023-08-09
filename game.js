@@ -128,25 +128,28 @@ request('http://' + address + '/join?entity=' + name + '&player=' + player + '&w
 }
 // game loop
 function loop() {
-  ctx.fillStyle = 'dimgray';
-  // entity interpolation
-  for (var entity in newentities) {
-    // case for first fetch
-    if (oldentities[entity] === undefined) {
-      entities[entity] = newentities[entity];
-    }
-    else {
-      entities[entity] = lerp(oldentities[entity], newentities[entity], t);
-    }
-    t += 0.02; // we get this from fetchrate (10 fetches per second) / framerate (60 frames per second)
-  }
   if (newentities.hasOwnProperty(name)) {
-    // client-side prediction
-    if (leftDown) {
-      entities[name].x--;
-    }
-    if (rightDown) {
-      entities[name].x++;
+    ctx.fillStyle = 'dimgray';
+    // entity interpolation
+    entities = structuredClone(newentities);
+    for (var entity in newentities) {
+      // case for first fetch
+      if (oldentities[entity] !== undefined) {
+        if (entity == name) {
+          // client side prediction for player's x position
+          if (leftDown) {
+            newentities[name].x--;
+          }
+          if (rightDown) {
+            newentities[name].x++;
+          }
+        }
+        else {
+          entities[entity].x = oldentities[entity].x + t * (newentities[entity].x - oldentities[entity].x);
+        }
+        entities[entity].y = oldentities[entity].y + t * (newentities[entity].y - oldentities[entity].y);
+      }
+      t += 0.02; // we get this from fetchrate (10 fetches per second) / framerate (60 frames per second)
     }
     // increment fps counter
     fpscounter++;
@@ -268,10 +271,9 @@ function fetchloop(fetched) {
     t = 0;
     oldentities = structuredClone(newentities);
     newentities = JSON.parse(data);
-    try {
+    if (fetched) {
       fetched();
     }
-    catch(err){}
   });
   request('http://' + address + '/getplatforms', function(data) {
     platforms = JSON.parse(data);
@@ -435,10 +437,3 @@ setInterval(function() {
   fps = fpscounter;
   fpscounter = 0;
 }, 1000);
-
-function lerp(oldentity, newentity, t) {
-  var lerpentity = structuredClone(newentity);
-  lerpentity.x = oldentity.x + t * (newentity.x - oldentity.x);
-  lerpentity.y = oldentity.y + t * (newentity.y - oldentity.y);
-  return lerpentity;
-}
