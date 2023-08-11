@@ -48,45 +48,52 @@ window.onresize = resize;
 function loadImage(image) {
   images[image] = new Image();
   images[image].src = 'images/' + image + '.png';
+  return new Promise(function(resolve, reject) {
+    images[image].onload = resolve;
+    images[image].onerror = reject;
+  });
 }
 // loading screen
-loadImage('loading');
-images['loading'].onload = function() {
+loadImage('loading').then(() => {
   ctx.drawImage(images['loading'], 0, 0);
-}
+});
 // load image assets
-loadImage('dead');
-loadImage('deadtext');
-for (var i = 0; i < 4; i++) {
-  entityFrames['player' + i + '/still'] = 1;
-  entityFrames['player' + i + '/jump'] = 1;
-  entityFrames['player' + i + '/crouch'] = 1;
-  loadImage('player' + i + '/still0');
-  loadImage('player' + i + '/jump0');
-  loadImage('player' + i + '/crouch0');
-  if (i == 0) {
-    entityFrames['player' + i + '/left'] = 4;
-    entityFrames['player' + i + '/right'] = 4;
-    for (var j = 0; j < 4; j++) {
-      loadImage('player' + i + '/left' + j);
-      loadImage('player' + i + '/right' + j);
+function loadImages() {
+  var promises = [];
+  promises.push(loadImage('dead'));
+  promises.push(loadImage('deadtext'));
+  for (var i = 0; i < 4; i++) {
+    entityFrames['player' + i + '/still'] = 1;
+    entityFrames['player' + i + '/jump'] = 1;
+    entityFrames['player' + i + '/crouch'] = 1;
+    promises.push(loadImage('player' + i + '/still0'));
+    promises.push(loadImage('player' + i + '/jump0'));
+    promises.push(loadImage('player' + i + '/crouch0'));
+    if (i == 0) {
+      entityFrames['player' + i + '/left'] = 4;
+      entityFrames['player' + i + '/right'] = 4;
+      for (var j = 0; j < 4; j++) {
+        promises.push(loadImage('player' + i + '/left' + j));
+        promises.push(loadImage('player' + i + '/right' + j));
+      }
+    }
+    else {
+      entityFrames['player' + i + '/left'] = 2;
+      entityFrames['player' + i + '/right'] = 2;
+      for (var j = 0; j < 2; j++) {
+        promises.push(loadImage('player' + i + '/left' + j));
+        promises.push(loadImage('player' + i + '/right' + j));
+      }
     }
   }
-  else {
-    entityFrames['player' + i + '/left'] = 2;
-    entityFrames['player' + i + '/right'] = 2;
-    for (var j = 0; j < 2; j++) {
-      loadImage('player' + i + '/left' + j);
-      loadImage('player' + i + '/right' + j);
-    }
+  for (var i = 0; i < 3; i++) {
+    promises.push(loadImage('box' + i));
   }
+  entityFrames['box'] = 3;
+  return Promise.all(promises);
 }
-loadImage('box0');
-loadImage('box1');
-loadImage('box2');
-entityFrames['box'] = 3;
 // join game
-images['player' + player + '/still0'].onload = function() {
+loadImages().then(function() {
 request('http://' + address + '/join?entity=' + name + '&player=' + player + '&width=' + images['player' + player + '/still0'].width + '&height=' + images['player' + player + '/still0'].height, function(data) {
   if (data === undefined) {
     alert('Error connecting to server! (Is it still up?)');
@@ -99,33 +106,30 @@ request('http://' + address + '/join?entity=' + name + '&player=' + player + '&w
   theme = JSON.parse(data).theme;
   end = JSON.parse(data).end;
   // load theme-specific assets
-  loadImage(theme);
-  loadImage(theme + 'platform');
-  loadImage(theme + 'enemyleft0');
-  loadImage(theme + 'enemyright0');
-  loadImage(theme + 'enemyleft1');
-  loadImage(theme + 'enemyright1');
+  var promises = [];
+  promises.push(loadImage(theme));
+  promises.push(loadImage(theme + 'platform'));
+  promises.push(loadImage(theme + 'enemyleft0'));
+  promises.push(loadImage(theme + 'enemyright0'));
+  promises.push(loadImage(theme + 'enemyleft1'));
+  promises.push(loadImage(theme + 'enemyright1'));
   entityFrames[theme + 'enemyleft'] = 2;
   entityFrames[theme + 'enemyright'] = 2;
-  loadImage(theme + 'end');
+  promises.push(loadImage(theme + 'end'));
   themesong.src = 'audio/' + theme + '.wav';
   themesong.loop = true;
   themesong.play();
-  images[theme].onload = function() {
+  Promise.all(promises).then(function() {
     // inital fetch
     fetchloop(function() {
-    // start fetch loop
-    setInterval(fetchloop, 100);
-    // start game loop
-    requestAnimationFrame(loop);
-    // start animation loop
-    setInterval(function() {
-      animationFrame++;
-    }, 125);
+      // start fetch loop
+      setInterval(fetchloop, 100);
+      // start game loop
+      requestAnimationFrame(loop);
     });
-  }
+  });
 });
-}
+});
 // game loop
 function loop() {
   if (newentities.hasOwnProperty(name)) {
@@ -173,6 +177,7 @@ function loop() {
     }
     // draw entities and nametags
     for (var entity in entities) {
+      console.log(entity, entities[entity]);
       ctx.drawImage(images[entities[entity].frame + (animationFrame % entityFrames[entities[entity].frame])], Math.round((entities[entity].x - entities[name].x) + 192), Math.round(entities[entity].y - 34));
       if (entities[entity].player) {
         ctx.fillText(entity, Math.round((entities[entity].x - entities[name].x) + 192), Math.round(entities[entity].y - 34));
@@ -267,6 +272,8 @@ setInterval(function() {
 }, 100);
 // fetch loop
 function fetchloop(fetched) {
+  // animation tick
+  animationFrame++;
   request('http://' + address + '/getentities', function(data) {
     t = 0;
     oldentities = structuredClone(newentities);
