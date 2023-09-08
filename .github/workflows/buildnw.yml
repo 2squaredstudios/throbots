@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Create build directory
         run: mkdir build
@@ -90,37 +90,37 @@ jobs:
         run: cd build && zip -r throbots-osx.zip ThroBots.app
 
       - name: Upload Windows x64 build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: throbots-win-x64.zip
           path: build/throbots-win-x64.zip
 
       - name: Upload Linux x64 build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: throbots-linux-x64.tar.gz
           path: build/throbots-linux-x64.tar.gz
 
       - name: Upload Windows ia32 build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: throbots-win-ia32.zip
           path: build/throbots-win-ia32.zip
 
       - name: Upload Linux ia32 build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: throbots-linux-ia32.tar.gz
           path: build/throbots-linux-ia32.tar.gz
 
       - name: Upload Debian installer build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: throbots-debian-x64.deb
           path: build/throbots-debian-x64.deb
 
       - name: Upload MacOS build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: throbots-osx.zip
           path: build/throbots-osx.zip
