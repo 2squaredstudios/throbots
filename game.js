@@ -177,7 +177,6 @@ function loop() {
     }
     // draw entities and nametags
     for (var entity in entities) {
-      console.log(entity, entities[entity]);
       ctx.drawImage(images[entities[entity].frame + (animationFrame % entityFrames[entities[entity].frame])], Math.round((entities[entity].x - entities[name].x) + 192), Math.round(entities[entity].y - 34));
       if (entities[entity].player) {
         ctx.fillText(entity, Math.round((entities[entity].x - entities[name].x) + 192), Math.round(entities[entity].y - 34));
